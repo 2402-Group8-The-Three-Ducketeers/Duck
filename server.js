@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import express from 'express'
 
+import { authRouter } from './db/auth/index.js';
+
 const PORT = process.env.PORT || 8080
 const server = express();
 
