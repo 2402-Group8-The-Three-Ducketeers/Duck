@@ -6,6 +6,8 @@ const prisma = new PrismaClient()
 console.log("in the seed file")
 
 const createUserTable = async () => {
+  console.log("creating the User table...")
+
   await prisma.user.create({
     data: {
       username: "admin",
@@ -22,6 +24,8 @@ const createUserTable = async () => {
       }
     })
   }
+
+  console.log("User table created!")
 }
 
 const seedData = async () => {
