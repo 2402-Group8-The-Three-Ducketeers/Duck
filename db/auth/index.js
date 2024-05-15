@@ -47,7 +47,7 @@ authRouter.post("/login", async (req, res, next) => {
       }
     })
 
-    const token = jwt.sign({ id: userToLogin.id }, process.env.JWT_SECRET)
+    const token = jwt.sign({ id: userToLogin.id, isAdmin: userToLogin.isAdmin }, process.env.JWT_SECRET)
     console.log("Logged in")
     res.send({ token })
   }catch (error){
