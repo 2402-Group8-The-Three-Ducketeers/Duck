@@ -30,11 +30,6 @@ apiRouter.put('/finduser/:id', async (req, res, next) => {
   const { id } = req.params
   const { newHighscore } = req.body
   try{
-    // const user = await prisma.user.findUnique({
-    //   where: {
-    //     id: id*1
-    //   }
-    // })
     const updatedHighscore = await prisma.user.update({
       where: {
         id: id*1,
@@ -44,6 +39,26 @@ apiRouter.put('/finduser/:id', async (req, res, next) => {
       }
     })
     res.send(updatedHighscore)
+  }catch (error){
+    console.log(error)
+    next(error)
+  }
+})
+
+// change username (should authenticate we are correct user or admin)
+apiRouter.put('/finduser/edit/:id', async (req, res, next) => {
+  const { id } = req.params
+  const { newUsername } = req.body
+  try{
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: id*1,
+      },
+      data: {
+        username: newUsername
+      }
+    })
+    res.send(updatedUser)
   }catch (error){
     console.log(error)
     next(error)
@@ -94,6 +109,23 @@ apiRouter.post('/friendpairs/:friendpairid', async (req, res, next) => {
   }
 })
 
+// delete a friendpair </3
+// (should probably authenticate that we are the right user)
+apiRouter.delete('/friendpairs/:friendpairid', async (req, res, next) => {
+  const { friendpairid } = req.params
+  try{ 
+    const friendPairToDelete = await prisma.friendPair.delete({
+      where: {
+        id: friendpairid*1
+      }
+    })
+    res.send(friendPairToDelete)
+  }catch (error){
+    console.log(error)
+    next(error)
+  }
+})
+
 // create a new message
 apiRouter.post('/friendpairs/chat/:chatid', async (req, res, next) => {
   const { chatid } = req.params
@@ -107,6 +139,58 @@ apiRouter.post('/friendpairs/chat/:chatid', async (req, res, next) => {
       }
     })
     res.send(newMessage)
+  }catch (error){
+    console.log(error)
+    next(error)
+  }
+})
+
+// get all messages from a chat
+apiRouter.get('/friendpairs/chat/:chatid/allmessages', async (req, res, next) => {
+  const { chatid } = req.params
+  try{
+    const messages = await prisma.message.findMany({
+      where: {
+        chatId: chatid*1
+      }
+    })
+    res.send(messages)
+  }catch (error){
+    console.log(error)
+    next(error)
+  }
+})
+
+// update a message (should authenticate we are correct user or admin)
+apiRouter.put('/friendpairs/chat/message/:messageid', async (req, res, next) => {
+  const { messageid } = req.params
+  const { newContent } = req.body
+  try{
+    const updatedMessage = await prisma.message.update({
+      where: {
+        id: messageid*1
+      },
+      data: {
+        content: newContent
+      }
+    })
+    res.send(updatedMessage)
+  }catch (error){
+    console.log(error)
+    next(error)
+  }
+})
+
+// delete a message
+apiRouter.delete('/friendpairs/chat/message/:messageid', async (req, res, next) => {
+  const { messageid } = req.params
+  try{
+    const deletedMessage = await prisma.message.delete({
+      where: {
+        id: messageid*1
+      }
+    })
+    res.send(deletedMessage)
   }catch (error){
     console.log(error)
     next(error)
