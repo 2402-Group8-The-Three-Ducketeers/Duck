@@ -25,10 +25,10 @@ apiRouter.get('/finduser/:id', async (req, res, next) => {
   }
 })
 
-// updating a high score
+// updating a high score (should authenticate we are correct user or admin)
 apiRouter.put('/finduser/:id', async (req, res, next) => {
   const { id } = req.params
-  const { newHighscore } = req.body
+  const { newHighscore } = req.body // might be a little tough to pass score data from the game
   try{
     const updatedHighscore = await prisma.user.update({
       where: {
