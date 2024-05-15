@@ -1,0 +1,57 @@
+.container {
+  position: relative;
+  text-align: center;
+  color: black;
+}
+
+.intro {
+  position: absolute;
+  bottom: 30%;
+  right: 50%;
+}
+
+.intro h1 {
+  display: inline-block;
+  background-color: black;
+  color: yellow;
+  margin-bottom: 60px;
+  font-size: 100px;
+}
+
+.intro h2 {
+  display: inline;
+  background-color: yellow;
+  color: black;
+  font-size: 40px;
+}
+
+.intro-buttons {
+  font-size: 25px;
+  margin-top: 60px;
+}
+
+.button1 {
+  background-color: yellow;
+  color: black;
+  margin-right: 25px;
+  height: 75px;
+  width: 150px;
+}
+
+.button1:hover {
+  background-color: black;
+  color: yellow;
+}
+
+.button2 {
+  background-color: black;
+  color: yellow;
+  margin-left: 25px;
+  height: 75px;
+  width: 150px;
+}
+
+.button2:hover {
+  background-color: yellow;
+  color: black;
+}
