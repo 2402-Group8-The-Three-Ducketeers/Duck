@@ -18,7 +18,7 @@ model User {
   username        String       @unique
   password        String   
   isAdmin         Boolean      @default(false)
-  highscore       BigInt?
+  highscore       Int?
   imageUrl        String?
   friend1Pairs    FriendPair[] @relation("Friend1") //friendships where you are friend1
   friend2Pairs    FriendPair[] @relation("Friend2") //friendships where you are friend2
@@ -31,21 +31,20 @@ model FriendPair {
   friend2Id       Int
   friend1         User         @relation("Friend1", fields: [friend1Id], references: [id])
   friend2         User         @relation("Friend2", fields: [friend2Id], references: [id])
-  chatId          Int
   chat            Chat[]
 }
 
 model Chat {
   id              Int          @id @default(autoincrement())
   friendPairId    Int
-  friendPair      FriendPair   @relation(fields: [friendPairId], references: [id])
+  friendPair      FriendPair   @relation(fields: [friendPairId], references: [id], onDelete: Cascade)
   messages        Message[]
 }
 
 model Message {
   id              Int          @id @default(autoincrement())
   chatId          Int
-  chat            Chat         @relation(fields: [chatId], references: [id])
+  chat            Chat         @relation(fields: [chatId], references: [id], onDelete: Cascade)
   userId          Int
   user            User         @relation(fields: [userId], references: [id])          
   content         String
