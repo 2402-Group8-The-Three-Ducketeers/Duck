@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "seed": "npx prisma migrate reset && node ./db/seed.js"
+    "seed": "npx prisma migrate reset && node ./db/seed.js",
+    "server": "node server.js"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
@@ -16,6 +17,7 @@
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "kaboom": "^3000.1.17",
     "prisma": "^5.14.0",
     "react": "^18.2.0",

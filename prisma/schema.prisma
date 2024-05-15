@@ -20,6 +20,7 @@ model User {
   isAdmin         Boolean      @default(false)
   highscore       Int?
   imageUrl        String?
+  nickname        String?
   friend1Pairs    FriendPair[] @relation("Friend1") //friendships where you are friend1
   friend2Pairs    FriendPair[] @relation("Friend2") //friendships where you are friend2
   messages        Message[]
