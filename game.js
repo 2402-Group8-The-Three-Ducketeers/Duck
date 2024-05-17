@@ -1,6 +1,8 @@
 // game.js
 import kaboom from "kaboom";
 
+const VideoGame = () => {
+
 kaboom({
   background: [135, 206, 235]
 });
@@ -107,3 +109,7 @@ onUpdate("platform", (p) => {
     p.dir = -p.dir
   }
 })
+
+}
+
+export default VideoGame
