@@ -1,6 +1,5 @@
 // game.js
 import kaboom from "kaboom";
-import { mockComponent } from "react-dom/test-utils";
 
 kaboom();
 
