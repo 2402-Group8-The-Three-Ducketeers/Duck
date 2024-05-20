@@ -3,10 +3,11 @@ import HomeBody from "../components/HomeBody"
 import Footer from "../components/Footer"
 
 const Home = () => {
+
   return (
     <>
     <Header/>
-    <HomeBody/>
+    <HomeBody />
     <Footer/>
     </>
   )
