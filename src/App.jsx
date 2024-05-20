@@ -8,8 +8,6 @@ import Game from "./pages/Game"
 import Profile from './pages/Profile'
 
 function App() {
-  
-
   return (
     <>
       <Routes>
