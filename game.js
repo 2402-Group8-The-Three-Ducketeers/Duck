@@ -1,8 +1,6 @@
 // game.js
 import kaboom from "kaboom";
 
-const VideoGame = () => {
-
   kaboom();
 
   loadSprite("duck", "/sprites/ducksprite.png");
@@ -350,6 +348,3 @@ const VideoGame = () => {
   })
 
   go("Lobby");
-}
-
-export default VideoGame;
