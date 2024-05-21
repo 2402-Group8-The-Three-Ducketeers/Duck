@@ -1,19 +1,30 @@
 // game.js
 import kaboom from "kaboom";
+import duckSpritePath from "./components/images/ducksprite.png"
+import cloudSpritePath from "./components/images/cloudsprite.png"
+import portalSpritePath from "./components/images/portal.png"
+import pterodactylSpritePath from "./components/images/pterodactyl.png"
+import grassSpritePath from "./components/images/grass.png"
+import sandSpritePath from "./components/images/sand.png"
+import eagleSpritePath from "./components/images/eagle.png"
+import groundSpritePath from "./components/images/ground.png"
+import lavaSpritePath from "./components/images/lava.png"
 
 const VideoGame = () => {
 
-  kaboom();
+  kaboom()
 
-  loadSprite("duck", "/sprites/ducksprite.png");
-  loadSprite("cloud", "/sprites/cloudsprite.png");
-  loadSprite("portal", "/sprites/portal.png");
-  loadSprite("pterodactyl", "sprites/pterodactyl.png");
-  loadSprite("grass", "sprites/grass.png");
-  loadSprite("sand", "sprites/sand.png");
-  loadSprite("eagle", "sprites/eagle.png");
-  loadSprite("ground", "sprites/ground.png");
-  loadSprite("lava", "sprites/lava.png");
+  
+
+  loadSprite("duck", duckSpritePath)
+  loadSprite("cloud", cloudSpritePath)
+  loadSprite("portal", portalSpritePath)
+  loadSprite("pterodactyl", pterodactylSpritePath)
+  loadSprite("grass", grassSpritePath)
+  loadSprite("sand", sandSpritePath)
+  loadSprite("eagle", eagleSpritePath)
+  loadSprite("ground", groundSpritePath)
+  loadSprite("lava", lavaSpritePath)
 
   // LOBBY
   scene("Lobby", () => {
@@ -162,7 +173,7 @@ const VideoGame = () => {
 
   })
 
-  go("Lobby");
+  // go("Lobby");
 
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
@@ -176,17 +187,6 @@ const VideoGame = () => {
     setBackground(135, 206, 235);
     setGravity(4000);
 
-
-    // Eagle wall movement
-    const eagMovement = () => {
-        return{
-          id: "eagMovement",
-          require: ["pos", "area"],
-          add() {
-            onKeyPress(() => move(RIGHT, PLAYER_SPEED-50))
-        }
-      }
-    }
 
     // Level design
     const LEVEL = [
@@ -351,5 +351,5 @@ const VideoGame = () => {
 
   go("Lobby");
 }
-
+// VideoGame()
 export default VideoGame;
