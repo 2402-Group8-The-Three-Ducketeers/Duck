@@ -1,38 +1,40 @@
-import { useState, useEffect } from "react";
-// import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 const Board = () => {
   const [users, setUsers] = useState([]);
-  const getAllUsers = async() => {
+
+  const getAllUsers = async () => {
     try {
       const response = await fetch('/api/allusers');
       const json = await response.json();
+      console.log(json)
       setUsers(json);
-    } catch(err) {
+    } catch (err) {
       throw err;
     }
-  }
+  };
 
-  useEffect(() => {getAllUsers();}, []);
+  useEffect(() => {
+    getAllUsers();
+  }, []);
 
   return (
     <>
-    <h1 className="highscores">Top Best Players</h1>
-    <section className="scores">
-      {
-        users.map((user) => {
-            return(
-              <div className="individual" key={user.id}>
+      <h1 className="highscores">Top Best Players</h1>
+      <section className="scores">
+        {users
+          .sort((a, b) => b.highscore - a.highscore)
+          .slice(0, 10)
+          .map((user) => (
+            <div className="individual" key={user.id}>
               <h2>{user.username}</h2>
-              <img src={user.imageURL} className="imageURL"/>
+              <img src={user.imageUrl} alt={user.username} className="imageURL" />
               <p>{user.highscore}</p>
             </div>
-          )
-        })
-      }
+          ))}
       </section>
     </>
-  )
-}
+  );
+};
 
-export default Board
+export default Board;
