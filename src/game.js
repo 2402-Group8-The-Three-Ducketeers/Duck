@@ -1,4 +1,3 @@
-// game.js
 import duckSpritePath from "./components/images/ducksprite.png"
 import cloudSpritePath from "./components/images/cloudsprite.png"
 import portalSpritePath from "./components/images/portal.png"
@@ -11,8 +10,10 @@ import lavaSpritePath from "./components/images/lava.png"
 import castleSpritePath from "./components/images/castle.png"
 import fireworksSpritePath from "./components/images/fireworks.png"
 
-
 import kaboom from "kaboom";
+
+
+const VideoGame = () => {
 
   kaboom();
 
@@ -142,7 +143,6 @@ import kaboom from "kaboom";
       rotate(0),
       spin(1500),
     ])
-    
 
     // Player movement
     const move = (x) => {
@@ -176,8 +176,6 @@ import kaboom from "kaboom";
 
   })
 
-  // go("Lobby");
-
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
 
@@ -201,7 +199,7 @@ import kaboom from "kaboom";
 
     const delay = add([timer()]);
 
-    const eagleMovement = (speed = PLAYER_SPEED - 50, dir = 1) => {
+    const eagleMovement = (speed = PLAYER_SPEED - 30, dir = 1) => {
       return {
         id: "eagleMovement",
         require: ["pos"],
@@ -272,7 +270,7 @@ import kaboom from "kaboom";
           area({scale: 0.9}),
           pos(-695, 10),
           scale(.3),
-          // eagleMovement(),
+          eagleMovement(),
           "eagle"
         ],
         "A": () => [
@@ -435,6 +433,7 @@ import kaboom from "kaboom";
     ])
 
     onKeyPress("space", () => go("Lobby"))
+
   })
 
 
@@ -469,4 +468,9 @@ import kaboom from "kaboom";
 
   })
 
-  go("World1");
+  go("Lobby");
+}
+
+VideoGame();
+
+export default VideoGame;
