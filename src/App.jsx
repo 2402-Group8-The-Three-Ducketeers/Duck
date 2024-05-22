@@ -19,6 +19,7 @@ function App() {
         <Route path="/board" element={<Leaderboard/>}/>
         <Route path="/game" element={<GamePage/>}/>
       </Routes>
+  
     </>
   )
 }
