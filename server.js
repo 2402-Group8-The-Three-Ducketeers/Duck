@@ -20,9 +20,7 @@ server.get("/", (req, res, next) => {
   res.sendFile(__dirname + "/dist/index.html")
 })
 
-// server.get("/game.js", (req, res, next) => {
-//   res.sendFile(__dirname + "/game.js")
-// })
+//backend api paths
 server.use('/api', apiRouter)
 server.use('/auth', authRouter)
 
