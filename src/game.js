@@ -1,17 +1,32 @@
 // game.js
 import kaboom from "kaboom";
 
+import duckSpritePath from "./components/images/ducksprite.png"
+import cloudSpritePath from "./components/images/cloudsprite.png"
+import portalSpritePath from "./components/images/portal.png"
+import pterodactylSpritePath from "./components/images/pterodactyl.png"
+import grassSpritePath from "./components/images/grass.png"
+import sandSpritePath from "./components/images/sand.png"
+import eagleSpritePath from "./components/images/eagle.png"
+import groundSpritePath from "./components/images/ground.png"
+import lavaSpritePath from "./components/images/lava.png"
+import castleSpritePath from "./components/images/castle.png"
+import fireworksSpritePath from "./components/images/fireworks.png"
+
+
   kaboom();
 
-  loadSprite("duck", "/sprites/ducksprite.png");
-  loadSprite("cloud", "/sprites/cloudsprite.png");
-  loadSprite("portal", "/sprites/portal.png");
-  loadSprite("pterodactyl", "sprites/pterodactyl.png");
-  loadSprite("grass", "sprites/grass.png");
-  loadSprite("sand", "sprites/sand.png");
-  loadSprite("eagle", "sprites/eagle.png");
-  loadSprite("ground", "sprites/ground.png");
-  loadSprite("lava", "sprites/lava.png");
+  loadSprite("duck", duckSpritePath);
+  loadSprite("cloud", cloudSpritePath);
+  loadSprite("portal", portalSpritePath);
+  loadSprite("pterodactyl", pterodactylSpritePath);
+  loadSprite("grass", grassSpritePath);
+  loadSprite("sand", sandSpritePath);
+  loadSprite("eagle", eagleSpritePath);
+  loadSprite("ground", groundSpritePath);
+  loadSprite("lava", lavaSpritePath);
+  loadSprite("castle", castleSpritePath);
+  loadSprite("fireworks", fireworksSpritePath);
 
   // LOBBY
   scene("Lobby", () => {
