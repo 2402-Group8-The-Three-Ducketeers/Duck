@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { setToken } from "../redux/authSlice.js"
-import { useDispatch } from "react-redux";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
+import { setToken } from '../redux/authSlice';
 
-const API = '/auth/register'
+const API = '/auth/register';
 
 const RegisterBody = () => {
   const [username, setUsername] = useState('');
@@ -12,37 +12,33 @@ const RegisterBody = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const submitHandler = async(e) => {
-    console.log("handler")
+  const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(API,
-      {
+      const response = await fetch(API, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           username: username,
-          password: password
+          password: password,
         }),
       });
-      console.log(response)
       const data = await response.json();
-      console.log(data)
 
-      if (data.token){
-        dispatch(setToken(data.token));
+      if (data.token) {
+        // Dispatch the token and isAdmin (if available)
+        dispatch(setToken({ token: data.token, isAdmin: data.isAdmin || false }));
 
-        localStorage.setItem("token", data.token);
-        navigate('/game');
+        localStorage.setItem('token', data.token);
+        navigate('/');
       }
-
-    } catch(err) {
-      throw err;
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
 
   return (
     <>
@@ -82,7 +78,7 @@ const RegisterBody = () => {
         </Form>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default RegisterBody
+export default RegisterBody;

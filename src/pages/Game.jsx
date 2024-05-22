@@ -4,6 +4,7 @@ import { setToken } from '../redux/authSlice';
 import { useDispatch } from 'react-redux';
 import  VideoGame  from "../../game.js"
 import { Link } from "react-router-dom"
+import LogIn from './LogIn.jsx';
 
 const Game = () => {
   const token = useSelector(state => state.authorization.token);
@@ -12,7 +13,7 @@ const Game = () => {
 
   return (
     <>
-    {token ? <VideoGame /> : <Link to="/login"/>}
+    {token ? <VideoGame /> : <LogIn/>}
     </>
   )
 }
