@@ -1,6 +1,4 @@
 // game.js
-import kaboom from "kaboom";
-
 import duckSpritePath from "./components/images/ducksprite.png"
 import cloudSpritePath from "./components/images/cloudsprite.png"
 import portalSpritePath from "./components/images/portal.png"
@@ -13,6 +11,8 @@ import lavaSpritePath from "./components/images/lava.png"
 import castleSpritePath from "./components/images/castle.png"
 import fireworksSpritePath from "./components/images/fireworks.png"
 
+
+import kaboom from "kaboom";
 
   kaboom();
 
@@ -88,7 +88,7 @@ import fireworksSpritePath from "./components/images/fireworks.png"
         pos(rand(0, width()), (i * height() / NUM_PLATFORMS - 70)),
         anchor("center"),
         body({isStatic: true}),
-        "platform",
+        "cloud",
         {
           speed: rand(50, 300),
           dir: choose([-1, 4]),
@@ -96,7 +96,7 @@ import fireworksSpritePath from "./components/images/fireworks.png"
       ])
     }
     
-    onUpdate("platform", (p) => {
+    onUpdate("cloud", (p) => {
       p.move(p.dir * p.speed, 0)
       if (p.pos.x < 85 || p.pos.x > width()-85) {
         p.dir = -p.dir
@@ -143,6 +143,7 @@ import fireworksSpritePath from "./components/images/fireworks.png"
       spin(1500),
     ])
     
+
     // Player movement
     const move = (x) => {
       duck.move(x, 0)
@@ -175,7 +176,7 @@ import fireworksSpritePath from "./components/images/fireworks.png"
 
   })
 
-  go("Lobby");
+  // go("Lobby");
 
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
@@ -189,14 +190,23 @@ import fireworksSpritePath from "./components/images/fireworks.png"
     setBackground(135, 206, 235);
     setGravity(4000);
 
+    add([
+      text("START",{
+        size: 300,
+      }),
+      color(0, 255, 0),
+      pos(150, 150),
+      opacity(.2),
+    ])
 
-    // Eagle wall movement
-    const eagMovement = () => {
-        return{
-          id: "eagMovement",
-          require: ["pos", "area"],
-          add() {
-            onKeyPress(() => move(RIGHT, PLAYER_SPEED-50))
+    const delay = add([timer()]);
+
+    const eagleMovement = (speed = PLAYER_SPEED - 50, dir = 1) => {
+      return {
+        id: "eagleMovement",
+        require: ["pos"],
+        update() {
+          wait(3.1, () => {this.move(speed * dir, 0)})
         }
       }
     }
@@ -221,7 +231,7 @@ import fireworksSpritePath from "./components/images/fireworks.png"
         ">                  =",
         "                  =",
         "",
-        "_         _         _         _         _         _         _         _         _         _         _         _         _",
+        "_         _         _         _         _         _         _         _         _         _         _      A",
       ],
     ]
     
@@ -259,12 +269,19 @@ import fireworksSpritePath from "./components/images/fireworks.png"
         ],
         ">": () => [
           sprite("eagle"),
-          area(),
-          pos(-395, 10),
+          area({scale: 0.9}),
+          pos(-695, 10),
           scale(.3),
-          // eagMovement(),
-          move(RIGHT, PLAYER_SPEED - 50),
+          // eagleMovement(),
           "eagle"
+        ],
+        "A": () => [
+          sprite("castle"),
+          area({scale: 0.2}),
+          pos(100, -100),
+          anchor("bot"),
+          scale(),
+          "castle"
         ]
       }
     }
@@ -295,41 +312,131 @@ import fireworksSpritePath from "./components/images/fireworks.png"
     // Player
     const duck = add([
       sprite("duck"),
-      scale(.2),
-      pos(200, 700),
+      scale(.2)  ,
+      pos(0,-50),
       area(),
       body({jumpForce: JUMP_FORCE}),
       anchor("center"),
       doubleJump(),
       rotate(0),
       spin(1500),
+      "duck",
     ])
     
+    // starting cloud platform
+    add([
+      sprite("cloud"),
+      area(),
+      pos(0, 0),
+      anchor("center"),
+      body({isStatic: true}),
+      "cloud",
+    ])
+    onUpdate("cloud", (c) => {
+      if (c.pos.y < 800) {
+        c.move(0, 360);
+      }
+    })
+
+    // Player movement
+    const playerControl = () => {
+      onKeyDown("left", () => {
+        duck.move(-PLAYER_SPEED, 0)
+      })
+      onKeyDown("right", () => {
+        duck.move(PLAYER_SPEED, 0)
+      })
+      duck.onDoubleJump(() => {
+        duck.spin()
+      })
+      onKeyPress("space", () => {
+        duck.doubleJump();  
+      })
+    }
+
+    // Start
+    delay.wait(3, () => {
+      add([
+        text("RUN!            >>>>>  >>>>>  >>>>>", {
+          size: 40,
+          transform: (idx) => ({
+          color: hsl2rgb((time() * 0.5 + idx * 1) % .2, .9, .5),
+        })
+      }),
+        pos(-30, 650),
+        lifespan(2, {fade: 0.5}),
+      ])
+      playerControl()
+    });
+
     // camera view
     duck.onUpdate(() => {
       // center camera to player
-        camPos(duck.pos.x + 600, 555)
+        camPos(duck.pos.x + 500, 555)
       })
 
-    // Player movement
-    onKeyDown("left", () => {
-      duck.move(-PLAYER_SPEED, 0)
-    })
-    onKeyDown("right", () => {
-      duck.move(PLAYER_SPEED, 0)
-    })
-    duck.onDoubleJump(() => {
-      duck.spin()
-    })
-    onKeyPress("space", () => {
-      duck.doubleJump();  
-    })
-
+    //Collision
     duck.onCollide("eagle", () => {
-      go("lose");
+      go("lose")
     })
 
-  })  
+    duck.onCollide("castle", () => {
+      go("win")
+    })
+
+  })
+  
+
+  // Win screen
+  scene("win", () => {
+    setBackground(1, 80, 32)
+    add([
+      rect(width() - 100, height() -100),
+      color(1, 80, 32),
+      outline(20),
+      pos(50, 50),
+    ])
+    add([
+      sprite("fireworks"),
+      pos(100, 350),
+      scale(1.5),
+    ])
+    add([
+      sprite("fireworks"),
+      pos(1380, 350),
+      scale(1.5),
+    ])
+    add([
+      sprite("duck"),
+      pos(width()/2 + -80, height()/2 - 230),
+    ])
+    add([
+      text("YOU'RE A WINNER!", {
+        size: 80,
+        transform: (idx, ch) => ({
+          color: hsl2rgb((time() * 0.7 + idx * .2) % 1, .9, .5),
+          pos: vec2(0, wave(-4, 4, time() * 10 + idx * 4))
+        })
+      }),
+      pos(width()/2 - 280, height()/2 - 350)
+    ])
+    add([
+      rect(270, 120, {radius: 30}),
+      pos(width()/2 + -100, height()/2 + 80),
+      color(0, 0, 200),
+    ])
+    add([
+      text("Time: "),
+      pos(width()/2 + -80, height()/2 + 100),
+    ])
+    add([
+      text("Coins: "),
+      pos(width()/2 + -80, height()/2 + 150),
+    ])
+
+    onKeyPress("space", () => go("Lobby"))
+  })
+
 
   // Lose screen
   scene("lose", () => {
@@ -337,6 +444,7 @@ import fireworksSpritePath from "./components/images/fireworks.png"
     add([
       text("YOU DEAD", {
         size: 100,
+        wordSpacing: 5,
       }),
       pos(width()/2 - 180, height()/2 - 120),
       color(255, 0, 0),
@@ -351,15 +459,14 @@ import fireworksSpritePath from "./components/images/fireworks.png"
     add([
       text("(y/n)", {
         size: 40,
-        transform: (idx) => ({
-          color: hsl2rgb((time() * 0.2 + idx * .2) % .1, .5, .7),
-        })
       }),
+      color(255,255,255),
       pos(width()/2 - 10, height()/2 + 50),
     ])
+
     onKeyPress("y", () => go("World1"));
     onKeyPress("n", () => go("Lobby"));
 
   })
 
-  go("Lobby");
+  go("World1");
