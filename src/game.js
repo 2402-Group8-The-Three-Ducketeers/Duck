@@ -1,4 +1,4 @@
-// game.js
+import kaboom from "kaboom";
 import duckSpritePath from "./components/images/ducksprite.png"
 import cloudSpritePath from "./components/images/cloudsprite.png"
 import portalSpritePath from "./components/images/portal.png"
@@ -27,6 +27,22 @@ import kaboom from "kaboom";
   loadSprite("lava", lavaSpritePath);
   loadSprite("castle", castleSpritePath);
   loadSprite("fireworks", fireworksSpritePath);
+
+const VideoGame = () => {
+
+  kaboom()
+
+  
+
+  loadSprite("duck", duckSpritePath)
+  loadSprite("cloud", cloudSpritePath)
+  loadSprite("portal", portalSpritePath)
+  loadSprite("pterodactyl", pterodactylSpritePath)
+  loadSprite("grass", grassSpritePath)
+  loadSprite("sand", sandSpritePath)
+  loadSprite("eagle", eagleSpritePath)
+  loadSprite("ground", groundSpritePath)
+  loadSprite("lava", lavaSpritePath)
 
   // LOBBY
   scene("Lobby", () => {
@@ -88,7 +104,9 @@ import kaboom from "kaboom";
         pos(rand(0, width()), (i * height() / NUM_PLATFORMS - 70)),
         anchor("center"),
         body({isStatic: true}),
+
         "cloud",
+        "platform",
         {
           speed: rand(50, 300),
           dir: choose([-1, 4]),
@@ -97,6 +115,7 @@ import kaboom from "kaboom";
     }
     
     onUpdate("cloud", (p) => {
+    onUpdate("platform", (p) => {
       p.move(p.dir * p.speed, 0)
       if (p.pos.x < 85 || p.pos.x > width()-85) {
         p.dir = -p.dir
@@ -143,7 +162,6 @@ import kaboom from "kaboom";
       spin(1500),
     ])
     
-
     // Player movement
     const move = (x) => {
       duck.move(x, 0)
@@ -232,6 +250,7 @@ import kaboom from "kaboom";
         "                  =",
         "",
         "_         _         _         _         _         _         _         _         _         _         _      A",
+        "_         _         _         _         _         _         _         _         _         _         _         _         _",
       ],
     ]
     
@@ -282,6 +301,12 @@ import kaboom from "kaboom";
           anchor("bot"),
           scale(),
           "castle"
+          area(),
+          pos(-395, 10),
+          scale(.3),
+          // eagMovement(),
+          move(RIGHT, PLAYER_SPEED - 50),
+          "eagle"
         ]
       }
     }
@@ -314,6 +339,8 @@ import kaboom from "kaboom";
       sprite("duck"),
       scale(.2)  ,
       pos(0,-50),
+      scale(.2),
+      pos(200, 700),
       area(),
       body({jumpForce: JUMP_FORCE}),
       anchor("center"),
@@ -437,6 +464,33 @@ import kaboom from "kaboom";
     onKeyPress("space", () => go("Lobby"))
   })
 
+    ])
+    
+    // camera view
+    duck.onUpdate(() => {
+      // center camera to player
+        camPos(duck.pos.x + 600, 555)
+      })
+
+    // Player movement
+    onKeyDown("left", () => {
+      duck.move(-PLAYER_SPEED, 0)
+    })
+    onKeyDown("right", () => {
+      duck.move(PLAYER_SPEED, 0)
+    })
+    duck.onDoubleJump(() => {
+      duck.spin()
+    })
+    onKeyPress("space", () => {
+      duck.doubleJump();  
+    })
+
+    duck.onCollide("eagle", () => {
+      go("lose");
+    })
+
+  })  
 
   // Lose screen
   scene("lose", () => {
@@ -445,6 +499,7 @@ import kaboom from "kaboom";
       text("YOU DEAD", {
         size: 100,
         wordSpacing: 5,
+=======
       }),
       pos(width()/2 - 180, height()/2 - 120),
       color(255, 0, 0),
@@ -464,9 +519,21 @@ import kaboom from "kaboom";
       pos(width()/2 - 10, height()/2 + 50),
     ])
 
+=======
+        transform: (idx) => ({
+          color: hsl2rgb((time() * 0.2 + idx * .2) % .1, .5, .7),
+        })
+      }),
+      pos(width()/2 - 10, height()/2 + 50),
+    ])
     onKeyPress("y", () => go("World1"));
     onKeyPress("n", () => go("Lobby"));
 
   })
 
   go("World1");
+=======
+  go("Lobby");
+}
+// VideoGame()
+export default VideoGame;
