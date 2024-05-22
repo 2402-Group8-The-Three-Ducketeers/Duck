@@ -176,8 +176,6 @@ import kaboom from "kaboom";
 
   })
 
-  // go("Lobby");
-
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
 
@@ -272,7 +270,7 @@ import kaboom from "kaboom";
           area({scale: 0.9}),
           pos(-695, 10),
           scale(.3),
-          // eagleMovement(),
+          eagleMovement(),
           "eagle"
         ],
         "A": () => [
@@ -469,4 +467,4 @@ import kaboom from "kaboom";
 
   })
 
-  go("World1");
+  go("Lobby");
