@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
-
+import { useSelector } from 'react-redux';
 const Profile = () => {
-  
-  const token = JSON.parse(localStorage.getItem('currentUser'))
-  
+  const token = useSelector(state => state.authorization.token);
 
   console.log("token: ", token)
   return (

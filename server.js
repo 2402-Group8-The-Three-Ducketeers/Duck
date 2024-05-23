@@ -13,7 +13,7 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
 //middleware for serving front end
-for (const path of ["/", "/login", "/register", "/game", "/board", "/admin"])
+for (const path of ["/", "/login", "/register", "/game", "/board", "/admin", "/profile"])
 server.use(path, express.static("./dist"));
 
 server.get("/", (req, res, next) => {
