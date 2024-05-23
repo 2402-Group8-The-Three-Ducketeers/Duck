@@ -15,7 +15,13 @@ import kaboom from "kaboom";
 
 const VideoGame = () => {
 
-  kaboom();
+  kaboom({
+    // width: 3000,
+    // height: 2000,
+    // stretch: true,
+    // scale: .5,
+    // background: [0, 0, 0, 0],
+  });
 
   loadSprite("duck", duckSpritePath);
   loadSprite("cloud", cloudSpritePath);
@@ -270,7 +276,7 @@ const VideoGame = () => {
           area({scale: 0.9}),
           pos(-695, 10),
           scale(.3),
-          eagleMovement(),
+          // eagleMovement(),
           "eagle"
         ],
         "A": () => [
@@ -379,14 +385,29 @@ const VideoGame = () => {
     })
 
     duck.onCollide("castle", () => {
-      go("win")
+      go("win", timePassed)
+    })
+
+    // clock
+    let timePassed = 0
+        
+    const clock = add([
+      fixed(),
+      anchor("topright"),
+      pos(2180, 10),
+      text(timePassed),
+    ])
+
+    onUpdate(() => {
+      timePassed += dt()
+      clock.text = timePassed.toFixed(2);
     })
 
   })
-  
+
 
   // Win screen
-  scene("win", () => {
+  scene("win", (timePassed) => {
     setBackground(1, 80, 32)
     add([
       rect(width() - 100, height() -100),
@@ -419,12 +440,12 @@ const VideoGame = () => {
       pos(width()/2 - 280, height()/2 - 350)
     ])
     add([
-      rect(270, 120, {radius: 30}),
+      rect(275, 120, {radius: 30}),
       pos(width()/2 + -100, height()/2 + 80),
       color(0, 0, 200),
     ])
     add([
-      text("Time: "),
+      text(`Time: ${timePassed.toFixed(2)}s`),
       pos(width()/2 + -80, height()/2 + 100),
     ])
     add([
@@ -468,7 +489,7 @@ const VideoGame = () => {
 
   })
 
-  go("Lobby");
+  go("World1");
 }
 
 VideoGame();
