@@ -62,11 +62,12 @@ apiRouter.put('/finduser/edit/:id', async (req, res, next) => {
   }
 })
 
+
 // find all users (for admins and for the leaderboard)
 apiRouter.get('/allusers', async (req, res, next) => {
-  if(!req.user){
-    return res.send("Please login to do that")
-  }
+  // if(!req.user){
+  //   return res.send("Please login to do that")
+  // }
   try{
     const users = await prisma.user.findMany()
     res.send(users)

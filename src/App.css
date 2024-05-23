@@ -55,3 +55,29 @@
   background-color: yellow;
   color: black;
 }
+
+.scores {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.individual {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.imageURL {
+  margin-right: 10px;
+  width: 50px;
+  height: 50px;
+}
+
+.score h2 {
+  margin-right: 10px;
+}
+
+.scores p {
+  margin-left: auto;
+}
