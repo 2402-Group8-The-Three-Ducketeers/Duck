@@ -9,6 +9,9 @@ import groundSpritePath from "./components/images/ground.png"
 import lavaSpritePath from "./components/images/lava.png"
 import castleSpritePath from "./components/images/castle.png"
 import fireworksSpritePath from "./components/images/fireworks.png"
+import coinSpritePath from "./components/images/coin.png"
+import spikeSpritePath from "./components/images/spike.png"
+import spikeblockSpritePath from "./components/images/spikeblock.png"
 
 import kaboom from "kaboom";
 
@@ -31,9 +34,12 @@ const VideoGame = () => {
   loadSprite("sand", sandSpritePath);
   loadSprite("eagle", eagleSpritePath);
   loadSprite("ground", groundSpritePath);
-  loadSprite("lava", lavaSpritePath);
   loadSprite("castle", castleSpritePath);
   loadSprite("fireworks", fireworksSpritePath);
+  loadSprite("coin", coinSpritePath);
+  loadSprite("spike", spikeSpritePath);
+  loadSprite("spikeblock", spikeblockSpritePath);
+  loadSprite("lava", lavaSpritePath);
 
   // LOBBY
   scene("Lobby", () => {
@@ -218,24 +224,24 @@ const VideoGame = () => {
     // Level design
     const LEVEL = [
       [
-        ">",
-        ">",
-        ">",
-        ">",
-        ">",
-        ">                                                                     =",
-        ">",
-        ">                                  ==        ====      ========",
-        ">",
-        ">                               ==",
-        ">",
-        ">",
-        ">                        ===== ",
-        ">                   ==",
-        ">                  =",
-        "                  =",
-        "",
-        "_         _         _         _         _         _         _         _         _         _         _      A",
+        ">                                                                                                                                                                         ",
+        ">                                                                                                                                                                         ",
+        ">                                                                                                                                                                         ",
+        ">                                                                     $                                                                                                   ",
+        ">                                                                                                                                                                         ",
+        ">                                                                     =                                                                                                   ",
+        ">                                                                                                                                                                         ",
+        ">                                  ==        ====      ========                                                                                                           ",
+        ">                                                                                                                                                                         ",
+        ">                               ==                                                                                                                                        ",
+        ">                                                                                                                                                                         ",
+        ">                                                                                                                                                                         ",
+        ">                        =====                                                                                                                                            ",
+        ">                   ==                                                                                                                                                    ",
+        ">                  =                                                                                                                                                      ",
+        "                  =                                                                                                                                                       ",
+        "                                       ^^^^^                                                                                                                              ",
+        "_                   _                  _                  _          ~~~~~~          _                  _                  _                  _                   _      A",
       ],
     ]
     
@@ -250,7 +256,6 @@ const VideoGame = () => {
           pos(31, 25),
           anchor("bot"),
           body({isStatic: true}),
-          offscreen({hide: true}),
           "ground",
         ],
         "=": () => [
@@ -265,10 +270,9 @@ const VideoGame = () => {
         "~": () => [
           sprite("lava"),
           area(),
-          scale(.5),
+          scale(.8),
+          pos(30, 50),
           anchor("bot"),
-          body({isStatic: true}),
-          offscreen({hide: true}),
           "lava"
         ],
         ">": () => [
@@ -282,11 +286,34 @@ const VideoGame = () => {
         "A": () => [
           sprite("castle"),
           area({scale: 0.2}),
-          pos(100, -100),
+          pos(82, -100),
           anchor("bot"),
           scale(),
           "castle"
-        ]
+        ],
+        "$": () => [
+          sprite("coin"),
+          area(.9),
+          pos(-14, 20),
+          scale(.9),
+          "coin"
+        ],
+        "^": () => [
+          sprite("spike"),
+          area(.9),
+          pos(0, -40),
+          scale(1),
+          anchor("bot"),
+          body({isStatic: true}),
+          "spike"
+        ],
+        "*": () => [
+          sprite("spikeblock"),
+          area(),
+          pos(),
+          scale(),
+          "spikeblock"
+        ],
       }
     }
 
@@ -381,6 +408,18 @@ const VideoGame = () => {
 
     //Collision
     duck.onCollide("eagle", () => {
+      go("lose")
+    })
+
+    duck.onCollide("lava", () => {
+      go("lose")
+    })
+
+    duck.onCollide("spike", () => {
+      go("lose")
+    })
+
+    duck.onCollide("spikeblock", () => {
       go("lose")
     })
 
