@@ -81,3 +81,62 @@
 .scores p {
   margin-left: auto;
 }
+
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: black;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.container1 {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.info-section, .duck-dash-section, .tutorial-section, .credits-section {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+h2, h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: yellow;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #c0392b;
+}
+
+.section-content {
+  display: none;
+}
+
+.info-section.show .section-content,
+.duck-dash-section.show .section-content,
+.tutorial-section.show .section-content,
+.credits-section.show .section-content {
+  display: block;
+}
