@@ -1,25 +1,26 @@
 import 'dotenv/config'
-import express from 'express'
+import express, { request } from 'express'
 import { apiRouter } from './db/api/index.js'
 import { authRouter } from './db/auth/index.js';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const PORT = process.env.PORT || 8080
 const server = express();
-
-// //middleware
-//server.use(express.static("./dist"));
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
-server.get('/', async (req, res, next) => {
-  try{
-    await res.send("Lets do some duck gaming!!!!")
-  }catch(error){
-    next(error)
-  }
+//middleware for serving front end
+for (const path of ["/", "/login", "/register", "/game", "/board"])
+server.use(path, express.static("./dist"));
+
+server.get("/", (req, res, next) => {
+  res.sendFile(__dirname + "/dist/index.html")
 })
 
+//backend api paths
 server.use('/api', apiRouter)
 server.use('/auth', authRouter)
 

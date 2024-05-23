@@ -3,15 +3,11 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  optimizeDeps: {
-    include: ["kaboom"],
+  build: {
+    assetsInlineLimit: 0,
   },
-server: {
-  proxy:{
-  "/auth" : "http://localhost:8080", 
-  "/api" : "http://localhost:8080"
-
-  }
-}, 
+  esbuild: {
+    minifySyntax: false,
+  },
   plugins: [react()],
 })

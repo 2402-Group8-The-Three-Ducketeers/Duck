@@ -4,7 +4,8 @@ import { Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import LogIn from "./pages/LogIn"
 import Register from "./pages/Register"
-import Game from "./pages/Game"
+import Leaderboard from "./pages/Leaderboard"
+import GamePage from "./pages/GamePage"
 import Admin from "./pages/Admin"
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/login" element={<LogIn/>}/>
         <Route path="/register" element={<Register/>}/>
-        <Route path="/game" element={<Game/>}/>
+        <Route path="/board" element={<Leaderboard/>}/>
+        <Route path="/game" element={<GamePage/>}/>
         <Route path="/admin" element={<Admin/>}/>
       </Routes>
     </>

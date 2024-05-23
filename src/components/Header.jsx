@@ -19,6 +19,7 @@ const Header = () => {
           <Navbar.Brand href="/">CODEFOWL</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link href="#features">Account</Nav.Link>
+            <Nav.Link href="/board">ScoreBoard</Nav.Link>
             <Nav.Link href="#pricing">Support</Nav.Link>
             {token && <Nav.Link href="/admin">Admin</Nav.Link>}
             {token && <Nav.Link onClick={()=>{logOut()}} href="/">Log Out</Nav.Link>}
