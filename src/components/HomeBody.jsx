@@ -36,7 +36,7 @@ const HomeBody = () => {
               <Link to="/login">
                 <button className="button1">Play</button>
               </Link>
-              <button className="button2">Info</button>
+              <Link to="/info"><button className="button2">Info</button></Link>
             </section>
           </div>
         </div>
