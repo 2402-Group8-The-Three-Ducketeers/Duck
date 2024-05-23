@@ -48,12 +48,10 @@ Remember, in the world of feathers and flight, courage knows no bounds. 🦆✨<
         <h2>Goals</h2>
         <h3>You main goal is to get the most points posible in the level</h3>
         <h3>To get point you have to:</h3>
-        <ul>
-          <li>Kill enemies</li>
-          <li>Complete the level</li>
-          <li>Get special items</li>
-          <li>Find collectibles</li>
-        </ul>
+          <h4>Kill enemies</h4>
+          <h4>Complete the level</h4>
+          <h4>Get special items</h4>
+          <h4>Find collectibles</h4>
                     </div>
                 )}
             </section>
@@ -67,11 +65,9 @@ Remember, in the world of feathers and flight, courage knows no bounds. 🦆✨<
                         <h1>Credits</h1>
       <h2>Game Developed and Published By CodeFowl Studios</h2>
       <h3>Developers:</h3>
-      <ul>
-        <li>Harris</li>
-        <li>Phuc Dang</li>
-        <li>Carlos Perez</li>
-      </ul>
+        <h4>Harris Goodhand</h4>
+        <h4>Phuc Dang</h4>
+        <h4>Carlos Perez</h4>
                     </div>
                 )}
             </section>
