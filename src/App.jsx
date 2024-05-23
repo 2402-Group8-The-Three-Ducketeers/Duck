@@ -6,6 +6,7 @@ import LogIn from "./pages/LogIn"
 import Register from "./pages/Register"
 import Leaderboard from "./pages/Leaderboard"
 import GamePage from "./pages/GamePage"
+import Admin from "./pages/Admin"
 
 function App() {
   
@@ -18,6 +19,7 @@ function App() {
         <Route path="/register" element={<Register/>}/>
         <Route path="/board" element={<Leaderboard/>}/>
         <Route path="/game" element={<GamePage/>}/>
+        <Route path="/admin" element={<Admin/>}/>
       </Routes>
     </>
   )
