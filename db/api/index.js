@@ -17,7 +17,27 @@ apiRouter.use((req, res, next) => {
   next()
 })
 
-// get a user by their id
+// get limited user by id, for friends lists
+apiRouter.get('/getuser/:id', async (req, res, next) => {
+  const { id } = req.params
+  try{
+    const user = await prisma.user.findUnique({
+      where: { id: id*1 },
+      select: {
+        username: true,
+        imageUrl: true,
+        nickname: true,
+        password: false,
+      },
+    })
+    res.send(user)
+  }catch (error){
+    console.log(error)
+    next(error)
+  }
+})
+
+// get the logged in user
 apiRouter.get('/getloggedinuser/', async (req, res, next) => {
   // const { id } = req.params
   if(!req.user){
@@ -25,9 +45,11 @@ apiRouter.get('/getloggedinuser/', async (req, res, next) => {
   }
   try{
     const user = await prisma.user.findUnique({
-      where: {
-        id: req.user.id*1
-      },
+      where: { id: req.user.id*1 },
+      include: {
+        friend1Pairs: true,
+        friend2Pairs: true
+      }
     })
     res.send(user)
   }catch (error){
@@ -40,9 +62,9 @@ apiRouter.get('/getloggedinuser/', async (req, res, next) => {
 // this query can be used to update highscore, username, or nickname, and it wont break if you leave the other keys blank
 apiRouter.put('/finduser/edit/:id', async (req, res, next) => {
   const { id } = req.params
-  const { newUsername, newHighscore, newNickname } = req.body
+  const { newUsername, newHighscore, newNickname, newImageUrl } = req.body
   if(req.user.id !== id*1 && !req.user.isAdmin){
-    return res.send("You are not allowed to change that username")
+    return res.send({message: "You are not allowed to edit that user"})
   }
   try{
     const updatedUser = await prisma.user.update({
@@ -52,7 +74,8 @@ apiRouter.put('/finduser/edit/:id', async (req, res, next) => {
       data: {
         username: newUsername,
         highscore: newHighscore*1,
-        nickname: newNickname
+        nickname: newNickname,
+        imageUrl: newImageUrl
       }
     })
     res.send(updatedUser)
