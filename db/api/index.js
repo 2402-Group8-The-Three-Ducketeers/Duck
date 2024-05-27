@@ -41,7 +41,7 @@ apiRouter.get('/getuser/:id', async (req, res, next) => {
 apiRouter.get('/getloggedinuser/', async (req, res, next) => {
   // const { id } = req.params
   if(!req.user){
-    return res.send("Please login to do that")
+    return res.send({message: "Please login to do that"})
   }
   try{
     const user = await prisma.user.findUnique({

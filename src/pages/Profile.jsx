@@ -4,38 +4,11 @@ import Header from '../components/Header';
 import FriendCard from '../components/FriendCard';
 import ProfileUserData from '../components/ProfileUserData';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 const Profile = () => {
-  const token = useSelector(state => state.authorization.token);
-  const [user, setUser] = useState(null)
-  const [friends, setFriends] = useState([])
-
-  const getUser = async () => {
-    try {
-      const response = await fetch('/api/getloggedinuser', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const json = await response.json();
-      setUser(json);
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // const logStuff = () => {
-  //   console.log("token: ", token)
-  //   console.log("user: ", user)
-  //   if(user){
-  //     console.log("user friendpair1s: ", user.friend1Pairs)
-  //     console.log("user friendpair2s: ", user.friend2Pairs)
-  //     console.log("friends: ", friends)
-  //   }
-  // }
+  const user = useSelector(state => state.user.user)
+  const [friends, setFriends] = useState([]);
 
   const getFriendIds = (userObject) => {
     const friendPair1s = userObject.friend1Pairs
@@ -67,10 +40,7 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    if(user === null){
-      getUser();
-    }
-    if(user !== null && friends.length == 0){
+    if(user !== null && friends.length === 0){
       getFriendData(getFriendIds(user))
     }
   }, [user]);

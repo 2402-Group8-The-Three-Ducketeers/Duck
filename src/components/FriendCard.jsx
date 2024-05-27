@@ -20,6 +20,7 @@ const FriendCard = ({ friend }) => {
             <Row>{friend.username}</Row>
         </Col>
         <Col><button>Message</button></Col>
+        <Col><button>Remove Friend &#128546;</button></Col>
       </Row>
   );
 }
