@@ -167,10 +167,12 @@ const VideoGame = () => {
     }
     
     onKeyDown("left", () => {
+      duck.flipX = true
       move(-PLAYER_SPEED)
     })
     
     onKeyDown("right", () => {
+      duck.flipX = false
       move(PLAYER_SPEED)
     })
     
@@ -211,7 +213,7 @@ const VideoGame = () => {
 
     const delay = add([timer()]);
 
-    const eagleMovement = (speed = PLAYER_SPEED - 30, dir = 1) => {
+    const eagleMovement = (speed = PLAYER_SPEED - 80, dir = 1) => {
       return {
         id: "eagleMovement",
         require: ["pos"],
@@ -234,14 +236,14 @@ const VideoGame = () => {
         ">                                  ==        ====      ========                                                                                                           ",
         ">                                                                                                                                                                         ",
         ">                               ==                                                                                                                                        ",
-        ">                                                                                                                                                                         ",
-        ">                                                                                                                                                                         ",
-        ">                        =====                                                                                                                                            ",
-        ">                   ==                                                                                                                                                    ",
-        ">       $$$        =                                                                                                                                                      ",
-        "                  =                                                                                                                                                       ",
-        "                                       ^^^^^                                                                                                                              ",
-        "_                   _                  _                  _          ~~~~~~          _                  _                  _                  _                   _      A",
+        ">                                                                                    =                                                                                    ",
+        ">                                                                                    =                                   =============           $$      $$      $$      $$      $$      $$      $$                   ",
+        ">                        =====                                                       =                                   =============                                     ",
+        ">                   ==                                                                        $  $  $  $  $  $  $  $  $  == == == == =                                    ",
+        ">       $$$        =                                                                 =                                   == == == == =                                     ",
+        "                  =                                                                  =                                                       ",
+        "                                       ^^^^^                                         =        ^  ^  ^  ^  ^  ^  ^  ^  ^                      -       -       -       -       -       -       -       -                             ",
+        "_                   _                  _                  _          ~~~~~~          _                  _                  _          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~         _                   _      A",
       ],
     ]
     
@@ -265,11 +267,20 @@ const VideoGame = () => {
           anchor("bot"),
           body({isStatic: true}),
           offscreen({hide: true}),
-          "platform",
+          "grass",
+        ],
+        "-": () => [
+          sprite("sand"),
+          area(),
+          scale(1),
+          anchor("bot"),
+          body({isStatic: true}),
+          offscreen({hide: true}),
+          "sand",
         ],
         "~": () => [
           sprite("lava"),
-          area(),
+          area({scale: 0.9}),
           scale(.8),
           pos(30, 50),
           anchor("bot"),
@@ -280,7 +291,7 @@ const VideoGame = () => {
           area({scale: 0.9}),
           pos(-695, 10),
           scale(.3),
-          // eagleMovement(),
+          eagleMovement(),
           "eagle"
         ],
         "A": () => [
@@ -293,14 +304,14 @@ const VideoGame = () => {
         ],
         "$": () => [
           sprite("coin"),
-          area(.9),
+          area({scale: 0.9}),
           pos(-14, 20),
           scale(.9),
           "coin"
         ],
         "^": () => [
           sprite("spike"),
-          area(.9),
+          area({scale: 0.9}),
           pos(0, -40),
           scale(1),
           anchor("bot"),
@@ -309,7 +320,7 @@ const VideoGame = () => {
         ],
         "*": () => [
           sprite("spikeblock"),
-          area(),
+          area({scale: 0.9}),
           pos(),
           scale(),
           "spikeblock"
@@ -343,8 +354,8 @@ const VideoGame = () => {
     // Player
     const duck = add([
       sprite("duck"),
-      scale(.2)  ,
-      pos(0,-50),
+      scale(.2),
+      pos(5,-50), //starting pos: (5, -50)
       area(),
       body({jumpForce: JUMP_FORCE}),
       anchor("center"),
@@ -381,9 +392,11 @@ const VideoGame = () => {
     // Player movement
     const playerControl = () => {
       onKeyDown("left", () => {
+        duck.flipX = true
         duck.move(-PLAYER_SPEED, 0)
       })
       onKeyDown("right", () => {
+        duck.flipX = false
         duck.move(PLAYER_SPEED, 0)
       })
       duck.onDoubleJump(() => {
@@ -434,6 +447,12 @@ const VideoGame = () => {
     
     duck.onCollide("castle", () => {
       go("win", timePassed, coins)
+    })
+
+    duck.onCollideUpdate("sand", (s) => {
+      wait(.2, () => {
+        s.move(0, 1000)
+      })
     })
 
     let coins = 0
