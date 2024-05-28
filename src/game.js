@@ -9,12 +9,20 @@ import groundSpritePath from "./components/images/ground.png"
 import lavaSpritePath from "./components/images/lava.png"
 import castleSpritePath from "./components/images/castle.png"
 import fireworksSpritePath from "./components/images/fireworks.png"
+
 import rotateeaglePath from "./components/images/eagle-rotate.png"
+
+import coinSpritePath from "./components/images/coin.png"
+import spikeSpritePath from "./components/images/spike.png"
+import spikeblockSpritePath from "./components/images/spikeblock.png"
+
 
 import kaboom from "kaboom";
 
+
 //function that runs our game and is exported to web page to be displayed
 const VideoGame = () => {
+
 
   kaboom(
 
@@ -32,6 +40,24 @@ const VideoGame = () => {
   loadSprite("castle", castleSpritePath);
   loadSprite("fireworks", fireworksSpritePath);
   loadSprite("rotated-eagle", rotateeaglePath)
+
+  kaboom()
+
+  loadSprite("duck", duckSpritePath)
+  loadSprite("cloud", cloudSpritePath)
+  loadSprite("portal", portalSpritePath)
+  loadSprite("pterodactyl", pterodactylSpritePath)
+  loadSprite("grass", grassSpritePath)
+  loadSprite("sand", sandSpritePath)
+  loadSprite("eagle", eagleSpritePath)
+  loadSprite("ground", groundSpritePath)
+  loadSprite("castle", castleSpritePath);
+  loadSprite("fireworks", fireworksSpritePath);
+  loadSprite("coin", coinSpritePath);
+  loadSprite("spike", spikeSpritePath);
+  loadSprite("spikeblock", spikeblockSpritePath);
+  loadSprite("lava", lavaSpritePath)
+
 
   // LOBBY
   scene("Lobby", () => {
@@ -217,24 +243,24 @@ const VideoGame = () => {
     // Level design
     const LEVEL = [
       [
-        ">",
-        ">",
-        ">",
-        ">",
-        ">",
-        ">                                                                     =",
-        ">",
-        ">                                  ==        ====      ========",
-        ">",
-        ">                               ==",
-        ">",
-        ">",
-        ">                        ===== ",
-        ">                   ==",
-        ">                  =",
-        "                  =",
-        "",
-        "_         _         _         _         _         _         _         _         _         _         _      A",
+        ">                                                                                                                                                                         ",
+        ">                                                                                                                                                                         ",
+        ">                                                                                                                                                                         ",
+        ">                                                                     $                                                                                                   ",
+        ">                                                                                                                                                                         ",
+        ">                                                                     =                                                                                                   ",
+        ">                                                                                                                                                                         ",
+        ">                                  ==        ====      ========                                                                                                           ",
+        ">                                                                                                                                                                         ",
+        ">                               ==                                                                                                                                        ",
+        ">                                                                                                                                                                         ",
+        ">                                                                                                                                                                         ",
+        ">                        =====                                                                                                                                            ",
+        ">                   ==                                                                                                                                                    ",
+        ">       $$$        =                                                                                                                                                      ",
+        "                  =                                                                                                                                                       ",
+        "                                       ^^^^^                                                                                                                              ",
+        "_                   _                  _                  _          ~~~~~~          _                  _                  _                  _                   _      A",
       ],
     ]
     
@@ -249,7 +275,6 @@ const VideoGame = () => {
           pos(31, 25),
           anchor("bot"),
           body({isStatic: true}),
-          offscreen({hide: true}),
           "ground",
         ],
         "=": () => [
@@ -264,10 +289,9 @@ const VideoGame = () => {
         "~": () => [
           sprite("lava"),
           area(),
-          scale(.5),
+          scale(.8),
+          pos(30, 50),
           anchor("bot"),
-          body({isStatic: true}),
-          offscreen({hide: true}),
           "lava"
         ],
         ">": () => [
@@ -281,11 +305,34 @@ const VideoGame = () => {
         "A": () => [
           sprite("castle"),
           area({scale: 0.2}),
-          pos(100, -100),
+          pos(82, -100),
           anchor("bot"),
           scale(),
           "castle"
-        ]
+        ],
+        "$": () => [
+          sprite("coin"),
+          area(.9),
+          pos(-14, 20),
+          scale(.9),
+          "coin"
+        ],
+        "^": () => [
+          sprite("spike"),
+          area(.9),
+          pos(0, -40),
+          scale(1),
+          anchor("bot"),
+          body({isStatic: true}),
+          "spike"
+        ],
+        "*": () => [
+          sprite("spikeblock"),
+          area(),
+          pos(),
+          scale(),
+          "spikeblock"
+        ],
       }
     }
 
@@ -324,6 +371,15 @@ const VideoGame = () => {
       rotate(0),
       spin(1500),
       "duck",
+    ])
+
+    // coins counter
+    const coinSprite = add([
+      sprite("coin"),
+      anchor("topright"),
+      pos(2000, 10),
+      scale(.6),
+      fixed(),
     ])
     
     // starting cloud platform
@@ -383,15 +439,52 @@ const VideoGame = () => {
       go("lose")
     })
 
+    duck.onCollide("lava", () => {
+      go("lose")
+    })
+
+    duck.onCollide("spike", () => {
+      go("lose")
+    })
+
+    duck.onCollide("spikeblock", () => {
+      go("lose")
+    })
+    
     duck.onCollide("castle", () => {
-      go("win")
+      go("win", timePassed, coins)
+    })
+
+    let coins = 0
+    const coinsCounter = add([
+      fixed(),
+      text(coins),
+      pos(2005, 10),
+    ])
+    duck.onCollide("coin", (c) => {
+      destroy(c)
+      coins += 1
+      coinsCounter.text = coins
+    })
+
+    // clock
+    let timePassed = 0
+    const clock = add([
+      fixed(),
+      anchor("topright"),
+      pos(2180, 10),
+      text(timePassed),
+    ])
+    onUpdate(() => {
+      timePassed += dt()
+      clock.text = timePassed.toFixed(2)
     })
 
   })
-  
+
 
   // Win screen
-  scene("win", () => {
+  scene("win", (timePassed, coins) => {
     setBackground(1, 80, 32)
     add([
       rect(width() - 100, height() -100),
@@ -416,7 +509,7 @@ const VideoGame = () => {
     add([
       text("YOU'RE A WINNER!", {
         size: 80,
-        transform: (idx, ch) => ({
+        transform: (idx) => ({
           color: hsl2rgb((time() * 0.7 + idx * .2) % 1, .9, .5),
           pos: vec2(0, wave(-4, 4, time() * 10 + idx * 4))
         })
@@ -424,16 +517,16 @@ const VideoGame = () => {
       pos(width()/2 - 280, height()/2 - 350)
     ])
     add([
-      rect(270, 120, {radius: 30}),
+      rect(275, 120, {radius: 30}),
       pos(width()/2 + -100, height()/2 + 80),
       color(0, 0, 200),
     ])
     add([
-      text("Time: "),
+      text(`Time: ${timePassed.toFixed(2)}s`),
       pos(width()/2 + -80, height()/2 + 100),
     ])
     add([
-      text("Coins: "),
+      text(`Coins: ${coins}`),
       pos(width()/2 + -80, height()/2 + 150),
     ])
 
@@ -884,5 +977,7 @@ const VideoGame = () => {
   go("Lobby");
 
 }
+
+// VideoGame();
 
 export default VideoGame;
