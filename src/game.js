@@ -428,7 +428,7 @@ const VideoGame = () => {
     })
     
     duck.onCollide("castle", () => {
-      go("win", coins, timePassed)
+      go("win", timePassed, coins)
     })
 
     let coins = 0
@@ -460,7 +460,7 @@ const VideoGame = () => {
 
 
   // Win screen
-  scene("win", (coins, timePassed) => {
+  scene("win", (timePassed, coins) => {
     setBackground(1, 80, 32)
     add([
       rect(width() - 100, height() -100),
