@@ -14,6 +14,7 @@ import spikeSpritePath from "./components/images/spike.png"
 import spikeblockSpritePath from "./components/images/spikeblock.png"
 
 import kaboom from "kaboom";
+import { mockComponent } from "react-dom/test-utils"
 
 
 const VideoGame = () => {
@@ -238,7 +239,7 @@ const VideoGame = () => {
         ">                                                                                                                                                                         ",
         ">                        =====                                                                                                                                            ",
         ">                   ==                                                                                                                                                    ",
-        ">                  =                                                                                                                                                      ",
+        ">       $$$        =                                                                                                                                                      ",
         "                  =                                                                                                                                                       ",
         "                                       ^^^^^                                                                                                                              ",
         "_                   _                  _                  _          ~~~~~~          _                  _                  _                  _                   _      A",
@@ -353,6 +354,15 @@ const VideoGame = () => {
       spin(1500),
       "duck",
     ])
+
+    // coins counter
+    const coinSprite = add([
+      sprite("coin"),
+      anchor("topright"),
+      pos(2000, 10),
+      scale(.6),
+      fixed(),
+    ])
     
     // starting cloud platform
     add([
@@ -422,31 +432,41 @@ const VideoGame = () => {
     duck.onCollide("spikeblock", () => {
       go("lose")
     })
-
+    
     duck.onCollide("castle", () => {
-      go("win", timePassed)
+      go("win", coins, timePassed)
+    })
+
+    let coins = 0
+    const coinsCounter = add([
+      fixed(),
+      text(coins),
+      pos(2005, 10),
+    ])
+    duck.onCollide("coin", (c) => {
+      destroy(c)
+      coins += 1
+      coinsCounter.text = coins
     })
 
     // clock
     let timePassed = 0
-        
     const clock = add([
       fixed(),
       anchor("topright"),
       pos(2180, 10),
       text(timePassed),
     ])
-
     onUpdate(() => {
       timePassed += dt()
-      clock.text = timePassed.toFixed(2);
+      clock.text = timePassed.toFixed(2)
     })
 
   })
 
 
   // Win screen
-  scene("win", (timePassed) => {
+  scene("win", (coins, timePassed) => {
     setBackground(1, 80, 32)
     add([
       rect(width() - 100, height() -100),
@@ -471,7 +491,7 @@ const VideoGame = () => {
     add([
       text("YOU'RE A WINNER!", {
         size: 80,
-        transform: (idx, ch) => ({
+        transform: (idx) => ({
           color: hsl2rgb((time() * 0.7 + idx * .2) % 1, .9, .5),
           pos: vec2(0, wave(-4, 4, time() * 10 + idx * 4))
         })
@@ -488,7 +508,7 @@ const VideoGame = () => {
       pos(width()/2 + -80, height()/2 + 100),
     ])
     add([
-      text("Coins: "),
+      text(`Coins: ${coins}`),
       pos(width()/2 + -80, height()/2 + 150),
     ])
 
