@@ -471,6 +471,6 @@ const VideoGame = () => {
   go("Lobby");
 }
 
-//VideoGame();
+// VideoGame();
 
 export default VideoGame;
