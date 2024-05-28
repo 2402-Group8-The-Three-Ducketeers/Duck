@@ -14,33 +14,27 @@ import spikeSpritePath from "./components/images/spike.png"
 import spikeblockSpritePath from "./components/images/spikeblock.png"
 
 import kaboom from "kaboom";
-import { mockComponent } from "react-dom/test-utils"
 
 
+//function that runs our game and is exported to web page to be displayed
 const VideoGame = () => {
 
-  kaboom({
-    // width: 3000,
-    // height: 2000,
-    // stretch: true,
-    // scale: .5,
-    // background: [0, 0, 0, 0],
-  });
+  kaboom()
 
-  loadSprite("duck", duckSpritePath);
-  loadSprite("cloud", cloudSpritePath);
-  loadSprite("portal", portalSpritePath);
-  loadSprite("pterodactyl", pterodactylSpritePath);
-  loadSprite("grass", grassSpritePath);
-  loadSprite("sand", sandSpritePath);
-  loadSprite("eagle", eagleSpritePath);
-  loadSprite("ground", groundSpritePath);
+  loadSprite("duck", duckSpritePath)
+  loadSprite("cloud", cloudSpritePath)
+  loadSprite("portal", portalSpritePath)
+  loadSprite("pterodactyl", pterodactylSpritePath)
+  loadSprite("grass", grassSpritePath)
+  loadSprite("sand", sandSpritePath)
+  loadSprite("eagle", eagleSpritePath)
+  loadSprite("ground", groundSpritePath)
   loadSprite("castle", castleSpritePath);
   loadSprite("fireworks", fireworksSpritePath);
   loadSprite("coin", coinSpritePath);
   loadSprite("spike", spikeSpritePath);
   loadSprite("spikeblock", spikeblockSpritePath);
-  loadSprite("lava", lavaSpritePath);
+  loadSprite("lava", lavaSpritePath)
 
   // LOBBY
   scene("Lobby", () => {
@@ -548,9 +542,9 @@ const VideoGame = () => {
 
   })
 
-  go("World1");
+  go("Lobby");
 }
 
-VideoGame();
+// VideoGame();
 
 export default VideoGame;

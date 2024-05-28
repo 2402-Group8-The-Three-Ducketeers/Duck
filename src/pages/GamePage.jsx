@@ -15,7 +15,7 @@ const Game = () => {
     VideoGame()
   }, [])
   
-  return <h1>Game Page</h1>
+  return <></>
 }
 
 export default Game
