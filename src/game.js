@@ -12,6 +12,7 @@ import fireworksSpritePath from "./components/images/fireworks.png"
 import coinSpritePath from "./components/images/coin.png"
 import spikeSpritePath from "./components/images/spike.png"
 import spikeblockSpritePath from "./components/images/spikeblock.png"
+import pizzaSpritePath from "./components/images/pizza.png"
 
 import kaboom from "kaboom";
 
@@ -40,6 +41,7 @@ const VideoGame = () => {
   loadSprite("spike", spikeSpritePath);
   loadSprite("spikeblock", spikeblockSpritePath);
   loadSprite("lava", lavaSpritePath);
+  loadSprite("pizza", pizzaSpritePath);
 
   // LOBBY
   scene("Lobby", () => {
@@ -52,7 +54,7 @@ const VideoGame = () => {
     setGravity(4000);
 
     // character double jump action
-    const spin = (speed) => {
+    const jumpSpin = (speed) => {
       let spinning = false;
       return {
         require: ["rotate"],
@@ -65,6 +67,22 @@ const VideoGame = () => {
             spinning = false
             this.angle = 0
           }
+        },
+        jumpSpin() {
+          spinning = true;
+        }
+      }
+    }
+
+    const spin = (speed) => {
+      let spinning = true;
+      return {
+        require: ["rotate"],
+        update() {
+          if (!spinning) {
+            return
+          }
+          this.angle += speed * dt()
         },
         spin() {
           spinning = true;
@@ -121,8 +139,7 @@ const VideoGame = () => {
       sprite("portal"),
       scale(.6),
       pos(width()-40, height()-156),
-      area({scale: 0.1}),
-      body({isStatic: true}),
+      area({scale: 0.3}),
       anchor("center"),
       "portal",
     ])
@@ -153,7 +170,7 @@ const VideoGame = () => {
       anchor("center"),
       doubleJump(),
       rotate(0),
-      spin(1500),
+      jumpSpin(1500),
     ])
 
     // Player movement
@@ -177,16 +194,62 @@ const VideoGame = () => {
     })
     
     duck.onDoubleJump(() => {
-      duck.spin()
+      duck.jumpSpin()
     })
     
     onKeyPress("space", () => {
       duck.doubleJump();  
     })
 
+    // Prompt start message
     duck.onCollide("portal", () => {
-      go("World1");
+      add([
+        text('Press "Enter"', {
+          size: 40,
+          transform: (idx) => ({
+            color: hsl2rgb((time() * .2 + idx * .1) % .1, 3, .7),
+          })
+        }),
+        pos(width() / 2 - 70, height() / 2 + 390),
+      ])
+      onKeyPress("enter", () => {
+        go("World1")
+      })
     })
+
+    // collectible pizza object for fun
+    add([
+      sprite("pizza"),
+      pos(10, 10),
+      scale(.4),
+    ])
+
+    add([
+      sprite("pizza"),
+      pos(rand(0, width()), rand(0, height() - 100)),
+      area({scale: 0.9}),
+      scale(.8),
+      rotate(),
+      spin(300),
+      anchor("center"),
+      "pizza"
+    ])
+
+    let pizzas = 0
+    const pizzasCounter = add([
+      fixed(),
+      text(pizzas, {
+        size: 25
+      }),
+      pos(37, 10),
+    ])
+
+    duck.onCollide("pizza", (p) => {
+      p.moveTo(rand(0, width()), rand(0, height() - 100))
+      pizzas += 1
+      pizzasCounter.text = pizzas
+    })
+
 
   })
 
@@ -331,7 +394,7 @@ const VideoGame = () => {
     const level = addLevel(LEVEL[0], levelConf);
       
     // character double jump action
-    const spin = (speed) => {
+    const jumpSpin = (speed) => {
       let spinning = false;
       return {
         require: ["rotate"],
@@ -345,7 +408,7 @@ const VideoGame = () => {
             this.angle = 0
           }
         },
-        spin() {
+        jumpSpin() {
           spinning = true;
         }
       }
@@ -361,7 +424,7 @@ const VideoGame = () => {
       anchor("center"),
       doubleJump(),
       rotate(0),
-      spin(1500),
+      jumpSpin(1500),
       "duck",
     ])
 
@@ -369,7 +432,7 @@ const VideoGame = () => {
     const coinSprite = add([
       sprite("coin"),
       anchor("topright"),
-      pos(2000, 10),
+      pos(30, 10),
       scale(.6),
       fixed(),
     ])
@@ -400,7 +463,7 @@ const VideoGame = () => {
         duck.move(PLAYER_SPEED, 0)
       })
       duck.onDoubleJump(() => {
-        duck.spin()
+        duck.jumpSpin()
       })
       onKeyPress("space", () => {
         duck.doubleJump();  
@@ -458,8 +521,10 @@ const VideoGame = () => {
     let coins = 0
     const coinsCounter = add([
       fixed(),
-      text(coins),
-      pos(2005, 10),
+      text(coins, {
+        size: 30
+      }),
+      pos(36, 11),
     ])
     duck.onCollide("coin", (c) => {
       destroy(c)
@@ -476,8 +541,10 @@ const VideoGame = () => {
       text(timePassed),
     ])
     onUpdate(() => {
-      timePassed += dt()
-      clock.text = timePassed.toFixed(2)
+      wait(3.1, () => {
+        timePassed += dt()
+        clock.text = timePassed.toFixed(2)
+      })
     })
 
   })
@@ -566,7 +633,7 @@ const VideoGame = () => {
 
   })
 
-  go("World1");
+  go("Lobby");
 }
 
 VideoGame();
