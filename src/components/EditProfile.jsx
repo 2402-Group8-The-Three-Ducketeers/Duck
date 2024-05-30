@@ -32,12 +32,12 @@ const EditProfile = ({ user }) => {
       </Button>
 
       <Modal show={editFormShow}>
-        <Modal.Header>
+        <Modal.Header style={{color: "black"}}>
           Editing Profile
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Label>
+            <Form.Label style={{color: "black"}}>
               New username:
             </Form.Label>
             <Form.Group controlId="editProfile">

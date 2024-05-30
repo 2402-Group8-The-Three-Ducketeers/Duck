@@ -80,14 +80,14 @@ const FriendSearch = ({friends, setFriends, user}) => {
         Add new Friend
       </Button>
       <Modal show={searchModalShow} onHide={closeSearchModal}>
-        <Modal.Header closeButton>
+        <Modal.Header style={{color: "black"}} closeButton>
           Search For new Friends
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="friendSearch">
-              <Form.Label>
-                Search for New Friends
+              <Form.Label style={{color: "black"}}>
+                Searching through all users:
               </Form.Label>
               <Form.Control
                 type="input"
@@ -118,7 +118,7 @@ const FriendSearch = ({friends, setFriends, user}) => {
         </Modal.Body>
       </Modal>
       <Modal show={addedModalShow} onHide={closeAddedModal}>
-        <Modal.Body>
+        <Modal.Body style={{color: "black"}}>
           {successMessage}
         </Modal.Body>
         <Modal.Footer>

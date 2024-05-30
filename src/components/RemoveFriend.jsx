@@ -62,10 +62,10 @@ const RemoveFriend = ({ friend, friends, setFriends }) => {
       </Button>
 
       <Modal show={promptShow} onHide={closePromptModal}  animation={true}>
-        <Modal.Header>
+        <Modal.Header style={{color: "black"}}>
           Removing Friend
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{color: "black"}}>
           Are you sure you want to remove {`${friend.user.username}`} from your friends list?
         </Modal.Body>
         <Modal.Footer>
@@ -83,7 +83,7 @@ const RemoveFriend = ({ friend, friends, setFriends }) => {
       </Modal>
 
       <Modal show={messageShow} onHide={closeMessageModal} animation={true}>
-          <Modal.Body>
+          <Modal.Body style={{color: "black"}}>
             {deleteMessage}
           </Modal.Body>
           <Button variant="primary" onClick={closeMessageModal}>

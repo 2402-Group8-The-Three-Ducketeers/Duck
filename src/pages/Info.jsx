@@ -1,15 +1,15 @@
 import Header from "../components/Header"
-import HomeBody from "../components/HomeBody"
+import InfoBody from "../components/InfoBody"
 import Footer from "../components/Footer"
 
-const Home = () => {
+const Info = () => {
   return (
     <>
     <Header/>
-      <HomeBody/>
+    <InfoBody/>
     <Footer/>
     </>
   )
 }
 
-export default Home
+export default Info
