@@ -1,9 +1,8 @@
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Row, Col } from 'react-bootstrap';
 import defaultAvatar from './images/duckDefaultAvatar.jpg'
+import RemoveFriend from './RemoveFriend';
 
-const FriendCard = ({ friend }) => {
+const FriendCard = ({ friend, friends, setFriends }) => {
 
   return (
       <Row className='friendCard mx-auto'>
@@ -11,16 +10,16 @@ const FriendCard = ({ friend }) => {
           <img
             width= {75}
             height= {75}
-            alt= {friend.username}
-            src= {friend.imageUrl? friend.imageUrl : defaultAvatar}
+            alt= {friend.user.username}
+            src= {friend.user.imageUrl? friend.user.imageUrl : defaultAvatar}
           />
         </Col>
         <Col className='mx-auto'>
-            {friend.nickname && <Row> {friend.nickname} </Row>}
-            <Row>{friend.username}</Row>
+            {friend.user.nickname && <Row> {friend.user.nickname} </Row>}
+            <Row>{friend.user.username}</Row>
         </Col>
         <Col><button>Message</button></Col>
-        <Col><button>Remove Friend &#128546;</button></Col>
+        <RemoveFriend friend={friend} friends={friends} setFriends={setFriends}/>
       </Row>
   );
 }

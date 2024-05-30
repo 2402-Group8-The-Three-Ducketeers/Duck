@@ -105,7 +105,7 @@ apiRouter.get('/allusers', async (req, res, next) => {
 apiRouter.post('/friendpairs/create', async (req, res, next) => {
   const { friend1, friend2 } = req.body
   if(req.user.id !== friend1*1 && req.user.id !== friend2*1){
-    return res.send("You can only make friendpairs that you are part of")
+    return res.send({message: "Authentication error. Failed to create friendpair"})
   }
 
   //make sure we dont already have a friendship between these users
@@ -125,7 +125,7 @@ apiRouter.post('/friendpairs/create', async (req, res, next) => {
   })
   
   if(friendCheck){
-    return res.send("Users are already friends")
+    return res.send({message: "Users are already friends"})
   }
 
   try{
@@ -135,9 +135,10 @@ apiRouter.post('/friendpairs/create', async (req, res, next) => {
         friend2Id: friend2*1,
       }
     })
-    res.send(newFriendPair)
+    res.send({message: "Friendpair successfully created", friendPair: newFriendPair})
   }catch (error){
     console.log(error)
+    res.send({message: "Failed to create friendpair", error: error})
     next(error)
   }
 })
@@ -197,7 +198,7 @@ apiRouter.delete('/friendpairs/delete/:friendpairid', async (req, res, next) => 
   })
 
   if(req.user.id !== friend1Id && req.user.id !== friend2Id ){
-    return res.send("You can only delete friendpairs that you are part of")
+    return res.send({message: "You can only delete friendpairs that you are part of"})
   }
 
   try{ 
@@ -206,9 +207,10 @@ apiRouter.delete('/friendpairs/delete/:friendpairid', async (req, res, next) => 
         id: friendpairid*1
       }
     })
-    res.send(friendPairToDelete)
+    res.send({success: true, friendDeleted: friendPairToDelete})
   }catch (error){
     console.log(error)
+    res.send({success: false})
     next(error)
   }
 })

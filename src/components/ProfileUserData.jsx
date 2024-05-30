@@ -1,6 +1,6 @@
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import EditProfile from './EditProfile';
 
 const ProfileUserData = ({ user }) => {
 
@@ -10,7 +10,7 @@ const ProfileUserData = ({ user }) => {
       <Row my-auto>{`Username: ${user.username}`}</Row>
       <Row my-auto>Highscore: {user.highscore? `${user.highscore}` : 
       'None Set Yet'}</Row>
-      <Row><button>Edit Profile</button></Row>
+      <EditProfile />
     </Container>
   )
 }
