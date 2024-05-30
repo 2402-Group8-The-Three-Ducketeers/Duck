@@ -1,29 +1,70 @@
-import 'dotenv/config'
-import express, { request } from 'express'
-import { apiRouter } from './db/api/index.js'
+import 'dotenv/config';
+import express from 'express';
+import { apiRouter } from './db/api/index.js';
 import { authRouter } from './db/auth/index.js';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import http from 'http';
+import { Server } from 'socket.io';
 
-const PORT = process.env.PORT || 8080
-const server = express();
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const PORT = process.env.PORT || 8080;
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-//middleware for serving front end
-for (const path of ["/", "/login", "/register", "/game", "/board", "/admin", "/info", "/profile"])
-server.use(path, express.static("./dist"));
+// Middleware for serving front end
+for (const path of ["/", "/login", "/register", "/game", "/board", "/admin", "/info", "/profile"]) {
+  app.use(path, express.static("./dist"));
+}
 
-server.get("/", (req, res, next) => {
-  res.sendFile(__dirname + "/dist/index.html")
-})
+app.get("/", (req, res, next) => {
+  res.sendFile(__dirname + "/dist/index.html");
+});
 
-//backend api paths
-server.use('/api', apiRouter)
-server.use('/auth', authRouter)
+// Backend API paths
+app.use('/api', apiRouter);
+app.use('/auth', authRouter);
+
+// Socket.io setup for real-time communication
+let players = {};
+
+io.on('connection', (socket) => {
+  console.log('New client connected', socket.id);
+
+  // Add new player to the game
+  players[socket.id] = {
+    id: socket.id,
+    x: 50,
+    y: 900,
+  };
+
+  // Send the current players to the new player
+  socket.emit('currentPlayers', players);
+
+  // Broadcast new player to existing players
+  socket.broadcast.emit('newPlayer', players[socket.id]);
+
+  // Handle player movement
+  socket.on('playerMovement', (movementData) => {
+    if (players[socket.id]) {
+      players[socket.id].x = movementData.x;
+      players[socket.id].y = movementData.y;
+      socket.broadcast.emit('playerMoved', players[socket.id]);
+    }
+  });
+
+  // Handle player disconnect
+  socket.on('disconnect', () => {
+    console.log('Client disconnected', socket.id);
+    delete players[socket.id];
+    io.emit('playerDisconnected', socket.id);
+  });
+});
 
 server.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
-})
+});
