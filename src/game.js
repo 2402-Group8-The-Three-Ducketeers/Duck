@@ -1,7 +1,7 @@
 import duckSpritePath from "./components/images/ducksprite.png"
 import cloudSpritePath from "./components/images/cloudsprite.png"
 import portalSpritePath from "./components/images/portal.png"
-import pterodactylSpritePath from "./components/images/pterodactyl.png"
+import sharkSpritePath from "./components/images/shark.png"
 import grassSpritePath from "./components/images/grass.png"
 import sandSpritePath from "./components/images/sand.png"
 import eagleSpritePath from "./components/images/eagle.png"
@@ -13,6 +13,7 @@ import coinSpritePath from "./components/images/coin.png"
 import spikeSpritePath from "./components/images/spike.png"
 import spikeblockSpritePath from "./components/images/spikeblock.png"
 import pizzaSpritePath from "./components/images/pizza.png"
+import axeSpritePath from "./components/images/axe.png"
 
 import kaboom from "kaboom";
 
@@ -30,7 +31,7 @@ const VideoGame = () => {
   loadSprite("duck", duckSpritePath);
   loadSprite("cloud", cloudSpritePath);
   loadSprite("portal", portalSpritePath);
-  loadSprite("pterodactyl", pterodactylSpritePath);
+  loadSprite("shark", sharkSpritePath);
   loadSprite("grass", grassSpritePath);
   loadSprite("sand", sandSpritePath);
   loadSprite("eagle", eagleSpritePath);
@@ -42,6 +43,7 @@ const VideoGame = () => {
   loadSprite("spikeblock", spikeblockSpritePath);
   loadSprite("lava", lavaSpritePath);
   loadSprite("pizza", pizzaSpritePath);
+  loadSprite("axe", axeSpritePath);
 
   // LOBBY
   scene("Lobby", () => {
@@ -213,7 +215,7 @@ const VideoGame = () => {
         pos(width() / 2 - 70, height() / 2 + 390),
       ])
       onKeyPress("enter", () => {
-        go("World1")
+        go("WorldN")
       })
     })
 
@@ -257,8 +259,8 @@ const VideoGame = () => {
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \\
 
 
-  // FIRST GAME WORLD
-  scene("World1", () => {
+  // Normal Mode
+  scene("WorldN", () => {
     const PLAYER_SPEED = 500;
     const JUMP_FORCE = 1000;
 
@@ -306,7 +308,7 @@ const VideoGame = () => {
         ">       $$$        =                                                                 =                                   == == == == =                                     ",
         "                  =                                                                  =                                                       ",
         "                                       ^^^^^                                         =        ^  ^  ^  ^  ^  ^  ^  ^  ^                      -       -       -       -       -       -       -       -                             ",
-        "_                   _                  _                  _          ~~~~~~          _                  _                  _          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~         _                   _      A",
+        "_                   _                  _                  _          ~~~~~~          _                  _                  _          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~         _                  _                  _                  _                  _                  _                  _                  _                  _                   _      A",
       ],
     ]
     
@@ -354,7 +356,7 @@ const VideoGame = () => {
           area({scale: 0.9}),
           pos(-695, 10),
           scale(.3),
-          eagleMovement(),
+          // eagleMovement(),
           "eagle"
         ],
         "A": () => [
@@ -493,19 +495,27 @@ const VideoGame = () => {
 
     //Collision
     duck.onCollide("eagle", () => {
-      go("lose")
+      addKaboom(duck.pos)
+      duck.destroy()
+      wait(1.5, () => go("lose"))
     })
 
     duck.onCollide("lava", () => {
-      go("lose")
+      addKaboom(duck.pos)
+      duck.destroy()
+      wait(1.5, () => go("lose"))
     })
 
     duck.onCollide("spike", () => {
-      go("lose")
+      addKaboom(duck.pos)
+      duck.destroy()
+      wait(1.5, () => go("lose"))
     })
 
     duck.onCollide("spikeblock", () => {
-      go("lose")
+      addKaboom(duck.pos)
+      duck.destroy()
+      wait(1.5, () => go("lose"))
     })
     
     duck.onCollide("castle", () => {
@@ -545,6 +555,33 @@ const VideoGame = () => {
         timePassed += dt()
         clock.text = timePassed.toFixed(2)
       })
+    })
+
+  })
+
+
+  // Hardmode
+  scene("WorldH", () => {
+
+     // shark obstacle
+     const spawnShark = () => {
+      add([
+        sprite("shark"),
+        area({scale: 0.9}),
+        move(LEFT, rand(500, 2000)),
+        pos(10000, rand(height())),
+        scale(.25),
+        "shark",
+      ])
+      wait(rand(2, 4), spawnShark)
+    }
+    
+    spawnShark();
+
+    duck.onCollide("shark", () => {
+      addKaboom(duck.pos)
+      duck.destroy()
+      wait(1.5, () => go("lose"))
     })
 
   })
@@ -628,12 +665,12 @@ const VideoGame = () => {
       pos(width()/2 - 10, height()/2 + 50),
     ])
 
-    onKeyPress("y", () => go("World1"));
+    onKeyPress("y", () => go("WorldN"));
     onKeyPress("n", () => go("Lobby"));
 
   })
 
-  go("Lobby");
+  go("WorldN");
 }
 
 VideoGame();
