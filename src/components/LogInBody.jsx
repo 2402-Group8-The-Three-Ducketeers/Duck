@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../redux/authSlice';
+import { setUser } from '../redux/userSlice';
 
 const API = '/auth/login';
 
@@ -35,17 +36,27 @@ const LogInBody = () => {
         dispatch(setToken({ token: data.token, isAdmin: data.isAdmin || false }));
 
         localStorage.setItem('token', data.token);
+
+        //also if we got a token, set the user for other pages
+        const userResponse = await fetch('/api/getloggedinuser', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data.token}`
+          }
+        });
+        const userJson = await userResponse.json();
+        dispatch(setUser(userJson));
       }
       if (data.error === 'Invalid credentials') {
         alert('Incorrect username or password, please try again.');
       } else {
         navigate('/');
-      }
+      }       
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   return (
     <>
       <h1>LOG IN</h1>

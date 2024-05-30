@@ -17,18 +17,39 @@ apiRouter.use((req, res, next) => {
   next()
 })
 
-// get a user by their id
-apiRouter.get('/finduser/:id', async (req, res, next) => {
-  console.log("req.user: ", req.user)
+// get limited user by id, for friends lists
+apiRouter.get('/getuser/:id', async (req, res, next) => {
   const { id } = req.params
-  if(req.user.id !== id*1){
-    return res.send("Please login to do that")
+  try{
+    const user = await prisma.user.findUnique({
+      where: { id: id*1 },
+      select: {
+        username: true,
+        imageUrl: true,
+        nickname: true,
+        password: false,
+      },
+    })
+    res.send(user)
+  }catch (error){
+    console.log(error)
+    next(error)
+  }
+})
+
+// get the logged in user
+apiRouter.get('/getloggedinuser/', async (req, res, next) => {
+  // const { id } = req.params
+  if(!req.user){
+    return res.send({message: "Please login to do that"})
   }
   try{
     const user = await prisma.user.findUnique({
-      where: {
-        id: id*1
-      },
+      where: { id: req.user.id*1 },
+      include: {
+        friend1Pairs: true,
+        friend2Pairs: true
+      }
     })
     res.send(user)
   }catch (error){
@@ -41,9 +62,9 @@ apiRouter.get('/finduser/:id', async (req, res, next) => {
 // this query can be used to update highscore, username, or nickname, and it wont break if you leave the other keys blank
 apiRouter.put('/finduser/edit/:id', async (req, res, next) => {
   const { id } = req.params
-  const { newUsername, newHighscore, newNickname } = req.body
+  const { newUsername, newHighscore, newNickname, newImageUrl } = req.body
   if(req.user.id !== id*1 && !req.user.isAdmin){
-    return res.send("You are not allowed to change that username")
+    return res.send({message: "You are not allowed to edit that user"})
   }
   try{
     const updatedUser = await prisma.user.update({
@@ -53,7 +74,8 @@ apiRouter.put('/finduser/edit/:id', async (req, res, next) => {
       data: {
         username: newUsername,
         highscore: newHighscore*1,
-        nickname: newNickname
+        nickname: newNickname,
+        imageUrl: newImageUrl
       }
     })
     res.send(updatedUser)
@@ -83,7 +105,7 @@ apiRouter.get('/allusers', async (req, res, next) => {
 apiRouter.post('/friendpairs/create', async (req, res, next) => {
   const { friend1, friend2 } = req.body
   if(req.user.id !== friend1*1 && req.user.id !== friend2*1){
-    return res.send("You can only make friendpairs that you are part of")
+    return res.send({message: "Authentication error. Failed to create friendpair"})
   }
 
   //make sure we dont already have a friendship between these users
@@ -103,7 +125,7 @@ apiRouter.post('/friendpairs/create', async (req, res, next) => {
   })
   
   if(friendCheck){
-    return res.send("Users are already friends")
+    return res.send({message: "Users are already friends"})
   }
 
   try{
@@ -113,9 +135,10 @@ apiRouter.post('/friendpairs/create', async (req, res, next) => {
         friend2Id: friend2*1,
       }
     })
-    res.send(newFriendPair)
+    res.send({message: "Friendpair successfully created", friendPair: newFriendPair})
   }catch (error){
     console.log(error)
+    res.send({message: "Failed to create friendpair", error: error})
     next(error)
   }
 })
@@ -175,7 +198,7 @@ apiRouter.delete('/friendpairs/delete/:friendpairid', async (req, res, next) => 
   })
 
   if(req.user.id !== friend1Id && req.user.id !== friend2Id ){
-    return res.send("You can only delete friendpairs that you are part of")
+    return res.send({message: "You can only delete friendpairs that you are part of"})
   }
 
   try{ 
@@ -184,9 +207,10 @@ apiRouter.delete('/friendpairs/delete/:friendpairid', async (req, res, next) => 
         id: friendpairid*1
       }
     })
-    res.send(friendPairToDelete)
+    res.send({success: true, friendDeleted: friendPairToDelete})
   }catch (error){
     console.log(error)
+    res.send({success: false})
     next(error)
   }
 })
