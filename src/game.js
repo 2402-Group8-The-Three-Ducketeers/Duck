@@ -1,32 +1,24 @@
-import duckSpritePath from "./components/images/ducksprite.png"
-import cloudSpritePath from "./components/images/cloudsprite.png"
-import portalSpritePath from "./components/images/portal.png"
-import pterodactylSpritePath from "./components/images/pterodactyl.png"
-import grassSpritePath from "./components/images/grass.png"
-import sandSpritePath from "./components/images/sand.png"
-import eagleSpritePath from "./components/images/eagle.png"
-import groundSpritePath from "./components/images/ground.png"
-import lavaSpritePath from "./components/images/lava.png"
-import castleSpritePath from "./components/images/castle.png"
-import fireworksSpritePath from "./components/images/fireworks.png"
-
-import rotateeaglePath from "./components/images/eagle-rotate.png"
-
-import coinSpritePath from "./components/images/coin.png"
-import spikeSpritePath from "./components/images/spike.png"
-import spikeblockSpritePath from "./components/images/spikeblock.png"
-
-
+import duckSpritePath from "./components/images/ducksprite.png";
+import cloudSpritePath from "./components/images/cloudsprite.png";
+import portalSpritePath from "./components/images/portal.png";
+import pterodactylSpritePath from "./components/images/pterodactyl.png";
+import grassSpritePath from "./components/images/grass.png";
+import sandSpritePath from "./components/images/sand.png";
+import eagleSpritePath from "./components/images/eagle.png";
+import groundSpritePath from "./components/images/ground.png";
+import lavaSpritePath from "./components/images/lava.png";
+import castleSpritePath from "./components/images/castle.png";
+import fireworksSpritePath from "./components/images/fireworks.png";
+import rotateeaglePath from "./components/images/eagle-rotate.png";
+import coinSpritePath from "./components/images/coin.png";
+import spikeSpritePath from "./components/images/spike.png";
+import spikeblockSpritePath from "./components/images/spikeblock.png";
 import kaboom from "kaboom";
+import { io } from "socket.io-client";
 
-
-//function that runs our game and is exported to web page to be displayed
+// Function that runs our game and is exported to web page to be displayed
 const VideoGame = () => {
-
-
-  kaboom(
-
-  );
+  kaboom();
 
   loadSprite("duck", duckSpritePath);
   loadSprite("cloud", cloudSpritePath);
@@ -39,25 +31,30 @@ const VideoGame = () => {
   loadSprite("lava", lavaSpritePath);
   loadSprite("castle", castleSpritePath);
   loadSprite("fireworks", fireworksSpritePath);
-  loadSprite("rotated-eagle", rotateeaglePath)
-
-  kaboom()
-
-  loadSprite("duck", duckSpritePath)
-  loadSprite("cloud", cloudSpritePath)
-  loadSprite("portal", portalSpritePath)
-  loadSprite("pterodactyl", pterodactylSpritePath)
-  loadSprite("grass", grassSpritePath)
-  loadSprite("sand", sandSpritePath)
-  loadSprite("eagle", eagleSpritePath)
-  loadSprite("ground", groundSpritePath)
-  loadSprite("castle", castleSpritePath);
-  loadSprite("fireworks", fireworksSpritePath);
+  loadSprite("rotated-eagle", rotateeaglePath);
   loadSprite("coin", coinSpritePath);
   loadSprite("spike", spikeSpritePath);
   loadSprite("spikeblock", spikeblockSpritePath);
-  loadSprite("lava", lavaSpritePath)
 
+  const socket = io("http://localhost:8080"); // Update the URL if necessary
+
+  const players = {};
+
+  // Helper function to add a player
+  const addPlayer = (id, x, y) => {
+    players[id] = add([
+      sprite("duck"),
+      scale(0.3),
+      pos(x, y),
+      area(),
+      body({ jumpForce: 1200 }),
+      anchor("center"),
+      doubleJump(),
+      rotate(0),
+      spin(1500),
+      { id },
+    ]);
+  };
 
   // LOBBY
   scene("Lobby", () => {
