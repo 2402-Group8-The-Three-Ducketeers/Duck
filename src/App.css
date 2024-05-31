@@ -139,3 +139,11 @@ button:hover {
 .credits-section.show .section-content {
   display: block;
 }
+
+.friendCard {
+  color: orange
+}
+
+.userProfileData {
+  color: orange
+}

@@ -9,6 +9,7 @@ import groundSpritePath from "./components/images/ground.png"
 import lavaSpritePath from "./components/images/lava.png"
 import castleSpritePath from "./components/images/castle.png"
 import fireworksSpritePath from "./components/images/fireworks.png"
+import rotateeaglePath from "./components/images/eagle-rotate.png"
 import coinSpritePath from "./components/images/coin.png"
 import spikeSpritePath from "./components/images/spike.png"
 import spikeblockSpritePath from "./components/images/spikeblock.png"
@@ -16,24 +17,27 @@ import pizzaSpritePath from "./components/images/pizza.png"
 import axeSpritePath from "./components/images/axe.png"
 import giantSpritePath from "./components/images/giant.png"
 
+
 import kaboom from "kaboom";
 
 
 //function that runs our game and is exported to web page to be displayed
 const VideoGame = () => {
 
-  kaboom()
+  kaboom(
+
+  );
 
   loadSprite("duck", duckSpritePath);
   loadSprite("cloud", cloudSpritePath);
   loadSprite("portal", portalSpritePath);
-  loadSprite("shark", sharkSpritePath);
   loadSprite("grass", grassSpritePath);
   loadSprite("sand", sandSpritePath);
   loadSprite("eagle", eagleSpritePath);
   loadSprite("ground", groundSpritePath);
   loadSprite("castle", castleSpritePath);
   loadSprite("fireworks", fireworksSpritePath);
+  loadSprite("rotated-eagle", rotateeaglePath)
   loadSprite("coin", coinSpritePath);
   loadSprite("spike", spikeSpritePath);
   loadSprite("spikeblock", spikeblockSpritePath);
@@ -41,6 +45,7 @@ const VideoGame = () => {
   loadSprite("pizza", pizzaSpritePath);
   loadSprite("axe", axeSpritePath);
   loadSprite("giant", giantSpritePath);
+
 
   // LOBBY
   scene("Lobby", () => {
@@ -258,6 +263,7 @@ const VideoGame = () => {
   // Normal Mode
   scene("WorldN", () => {
     const PLAYER_SPEED = 500;
+    const EAGLE_SPEED = 100;
     const JUMP_FORCE = 1000;
 
     setBackground(135, 206, 235);
@@ -829,6 +835,7 @@ const VideoGame = () => {
   })
 
   go("Lobby");
+
 }
 
 // VideoGame();
