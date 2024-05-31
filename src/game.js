@@ -14,6 +14,7 @@ import spikeSpritePath from "./components/images/spike.png"
 import spikeblockSpritePath from "./components/images/spikeblock.png"
 import pizzaSpritePath from "./components/images/pizza.png"
 import axeSpritePath from "./components/images/axe.png"
+import giantSpritePath from "./components/images/giant.png"
 
 import kaboom from "kaboom";
 
@@ -44,6 +45,7 @@ const VideoGame = () => {
   loadSprite("lava", lavaSpritePath);
   loadSprite("pizza", pizzaSpritePath);
   loadSprite("axe", axeSpritePath);
+  loadSprite("giant", giantSpritePath);
 
   // LOBBY
   scene("Lobby", () => {
@@ -274,16 +276,47 @@ const VideoGame = () => {
       color(0, 255, 0),
       pos(150, 150),
       opacity(.2),
+      offscreen({hide: true}),
+    ])
+
+    add([
+      text("CONGRATS!", {
+        size: 80,
+        transform: (idx) => ({
+          color: hsl2rgb((time() * 2 + idx * .6) % .9, 1, .5),
+          pos: vec2(0, wave(-8, 8, time() * 30 + idx * 4))
+        })
+      }),
+      pos(26000, 750),
+      opacity(.6),
+      offscreen({hide: true}),
     ])
 
     const delay = add([timer()]);
 
-    const eagleMovement = (speed = PLAYER_SPEED - 110, dir = 1) => {
+    const eagleMovement = (speed = PLAYER_SPEED - 150, dir = 1) => {
       return {
         id: "eagleMovement",
         require: ["pos"],
-        update() {
+        update () {
           wait(3.1, () => {this.move(speed * dir, 0)})
+        }
+      }
+    }
+
+    const mobPatrol = (speed = 200, dir = 1) => {
+      return {
+        id: "mobPatrol",
+        require: ["pos", "area"],
+        add() {
+          this.on("collide", (obj, col) => {
+            if (col.isLeft() || col.isRight()) {
+              dir = -dir
+            }
+          })
+        },
+        update() {
+          this.move(speed * dir, 0)
         }
       }
     }
@@ -291,24 +324,24 @@ const VideoGame = () => {
     // Level design
     const LEVEL = [
       [
-        ">                                                                                                                                                                                                                          =                                                                                                                                                                                                    ",
-        ">                                                                                                                                                                                                                          ============================                      ===================================================  =======                                                                       ===========     ",
-        ">                                                                                                                                                                                                                          =$                         ========               =     $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $  ====    $*=                                                                       ==              ",
-        ">                                                                     $                                                                                                                                                    =$                                ==              =  =                                                  * $ *=                                                                       ==        =     ",
-        ">                                                                                                                                                                                                                          =     ===========================  ==   ===========  ====================================================*  *=                                                                                ==     ",
-        ">                                                                     =                                                                                                                                                    =   ===                         ==  == ==      $$$   =                                                  =*   =                                                                               ==      ",
-        ">                                                                                                                                                                                                                          =    $=                          ==  ===  =====   ====                                                  =* $ =                                                                              ==       ",
-        ">                                  ==        ====      ========                                                                                                                                                            =    $=                           ==  =  == *                                                           = $  =                                                                             ==        ",
-        ">                                                                                                                                                                                                                          ===   =                            ==   ==  *                                                           =* * =                                                                            ==         ",
-        ">                               ==                                                                                                                                                                                         =     =                             =====   *                                                           =  * =                                                                           ==          ",
-        ">                                                                                    =                                                                                                                                     =     =                                     *                                                           = $* =                                                                          ==           ",
-        ">                                                                                    =                                   =============           $$      $$      $$      $$      $$      $$      $$          ===============   ===                                     *                                                           = $* =            $      $      ******                                         ==            ",
-        ">                        =====                                                       =                                   =============                                                                              $$$         $=                                     *                                                           = $* =$                       -                                              ===             ",
-        ">                   ==                                                                        $  $  $  $  $  $  $  $  $  == == == == =                                                                                           =                                     *                                                           = $* =            =      =        $    =========================================             ",
-        ">       $$$        =                                                                 =                                   == == == == =                                                                                     =======                                     *                                                           = $* ==           =      =     ** $******************* $$$$$$$$$$$$$$$$$$$$$$$$$$$           ",
-        "                  =                                                                  =                                                                                                                                     =                                           *                                                           =                 =      =                                                                   ",
-        "                                       ^^^^^                                         =        ^  ^  ^  ^  ^  ^  ^  ^  ^                      -       -       -       -       -       -       -       -              ========                                                                                                       =^                        ^^^^^                                                              ",
-        "_                   _                  _                  _          ~~~~~~          _                  _                  _          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~         _                  _                  _          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~          _                  _                  _                  _                   _      A",
+        ">                                                                                                                                                                                                                          =                                                                                                                                                                                                        =",
+        ">                                                                                                                                                                                                                          ============================                      ===================================================  =======                                                                       ===========         =",
+        ">                                                                                                                                                                                                                          =$                         ========               =     $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $ $  ====    $*=                                                                       ==                  =",
+        ">                                                                     $                                                                                                                                                    =$                                ==              =  =                                                  * $ *=                                                                       ==        =         =",
+        ">                                                                                                                                                                                                                          =     ===========================  ==   ===========  ====================================================*  *=                                                                                ==         =",
+        ">                                                                     =                                                                                                                                                    =   ===                         ==  == ==      $$$   =                                                  =*   =                                                                               ==          =",
+        ">                                                                                                                                                                                                                          =    $=                          ==  ===  =====   ====                                                  =* $ =                                                                              ==           =",
+        ">                                  ==        ====      ========                                                                                                                                                            =    $=                           ==  =  == *                                                           = $  =                                                                             ==            =",
+        ">                                                                                                                                                                                                                          ===   =                            ==   ==  *                                                           =* * =                                                                            ==             =",
+        ">                               ==                                                                                                                                                                                         =     =                             =====   *                                                           =  * =                                                                           ==              =",
+        ">                                                                                    =                                                                                                                                     =     =                                     *                                                           = $* =                                                                          ==               =",
+        ">                                                                                    =                                   =============           $$      $$      $$      $$      $$      $$      $$          ===============   ===                                     *                                                           = $* =            $      $      ******                                         ==                =",
+        ">                        =====                                                       =                                   =============                                                                              $$$         $=                                     *                                                           = $* =$                       -                                              ===                 =",
+        ">                   ==                                                                        $  $  $  $  $  $  $  $  $  == == == == =                                                                                           =                                     *                                                           = $* =            =      =        $    =========================================                 =",
+        ">       $$$        =                                                                 =                                   == == == == =                                                                                     =======                                     *                                                           = $* ==           =      =     ** $******************* $$$$$$$$$$$$$$$$$$$$$$$$$$$               =",
+        "                  =                                                                  =                                                                                                                                     =                                           *                                                           =                 =      =                                                                       =",
+        "                                       ^^^^^                                         =        ^  ^  ^  ^  ^  ^  ^  ^  ^                      -       -       -       -       -       -       -       -              ========                                                                                                       =^                        ^^^^^                                                                  =",
+        "_                   _                  _                  _          ~~~~~~          _                  _                  _          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~         _                  _                  _          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~          _                  _                  _                  _                   _      A   =",
       ],
     ]
     
@@ -364,7 +397,7 @@ const VideoGame = () => {
         "A": () => [
           sprite("castle"),
           area({scale: 0.2}),
-          pos(82, -100),
+          pos(60, -100),
           anchor("bot"),
           scale(),
           offscreen({hide: true}),
@@ -436,6 +469,17 @@ const VideoGame = () => {
       "duck",
     ])
 
+    // Giant patrol mob
+    const giant = add([
+      sprite("giant"),
+      pos(24500, 605),
+      area({scale: 0.9}),
+      scale(.8),
+      mobPatrol(),
+      offscreen({hide: true}),
+      "giant",
+    ])
+
     // coins counter
     const coinSprite = add([
       sprite("coin"),
@@ -452,6 +496,7 @@ const VideoGame = () => {
       pos(0, 0),
       anchor("center"),
       body({isStatic: true}),
+      offscreen({hide: true}),
       "cloud",
     ])
     onUpdate("cloud", (c) => {
@@ -492,6 +537,7 @@ const VideoGame = () => {
           area({scale: 0.9}),
           scale(),
           anchor("center"),
+          offscreen({hide: true}),
           "axe",
         ])
       }
@@ -506,13 +552,64 @@ const VideoGame = () => {
     spinAxe(vec2(14600, 10), -60)
     spinAxe(vec2(21200, 850), -60)
     spinAxe(vec2(22047, 740), -60)
-    spinAxe(vec2(22047, 740), -90)
-    spinAxe(vec2(22047, 740), -120)
-    spinAxe(vec2(22047, 740), -150)
-    spinAxe(vec2(22047, 740), -180)
-    spinAxe(vec2(22047, 740), -210)
     spinAxe(vec2(22047, 740), -240)
 
+    // Confetti
+    const DEF_COUNT = 80
+    const DEF_GRAVITY = 800
+    const DEF_AIR_DRAG = 0.9
+    const DEF_VELOCITY = [1000, 4000]
+    const DEF_ANGULAR_VELOCITY = [-200, 200]
+    const DEF_FADE = 0.2
+    const DEF_SPREAD = 40
+    const DEF_SPIN = [2, 8]
+    const DEF_SATURATION = 2
+    const DEF_LIGHTNESS = 0.5
+
+    const addConfetti = (opt = {}) => {
+      const sample = (s) => typeof s === "function" ? s() : s
+      for (let i = 0; i < (opt.count ?? DEF_COUNT); i++) {
+        const p = add([
+          pos(26680, 850),
+          choose([
+            rect(rand(5, 20), rand(5, 20)),
+            circle(rand(3, 10)),
+          ]),
+          color(sample(opt.color ?? hsl2rgb(rand(0, 1), DEF_SATURATION, DEF_LIGHTNESS))),
+          opacity(1),
+          lifespan(7),
+          scale(.6),
+          anchor("center"),
+          rotate(rand(0, 360)),
+          offscreen({hide: true}),
+        ])
+        const spin = rand(DEF_SPIN[0], DEF_SPIN[1])
+        const gravity = opt.gravity ?? DEF_GRAVITY
+        const airDrag = opt.airDrag ?? DEF_AIR_DRAG
+        const heading = sample(opt.heading ?? 0) - 90
+        const spread = opt.spread ?? DEF_SPREAD
+        const head = heading + rand(-spread / 2, spread / 2)
+        const fade = opt.fade ?? DEF_FADE
+        const vel = sample(opt.velocity ?? rand(DEF_VELOCITY[0], DEF_VELOCITY[1]))
+        let velX = Math.cos(deg2rad(head)) * vel
+        let velY = Math.sin(deg2rad(head)) * vel
+        const velA = sample(opt.angularVelocity ?? rand(DEF_ANGULAR_VELOCITY[0], DEF_ANGULAR_VELOCITY[1]))
+        p.onUpdate(() => {
+          velY += gravity * dt()
+          p.pos.x += velX * dt()
+          p.pos.y += velY * dt()
+          p.angle += velA * dt()
+          p.opacity -= fade * dt()
+          velX *= airDrag
+          velY *= airDrag
+          p.scale.x = wave(-1, 1, time() * spin)
+        })
+      }
+      wait(2, addConfetti)
+    }
+
+    addConfetti()
+    
     // Start
     delay.wait(3, () => {
       add([
@@ -542,7 +639,9 @@ const VideoGame = () => {
     // camera view
     duck.onUpdate(() => {
       // center camera to player
+      if (duck.pos.x < 25300) {
         camPos(duck.pos.x + 500, 555)
+        }
       })
 
     //Collision
@@ -575,6 +674,13 @@ const VideoGame = () => {
       duck.destroy()
       wait(2, () => go("lose"))
     })
+
+    duck.onCollide("giant", (e, col) => {
+        addKaboom(duck.pos)
+        duck.destroy()
+        wait(2, () => go("lose"))
+      }
+    )
     
     duck.onCollide("castle", () => {
       go("win", timePassed, coins)
@@ -728,7 +834,7 @@ const VideoGame = () => {
 
   })
 
-  go("WorldN");
+  go("Lobby");
 }
 
 VideoGame();
