@@ -249,7 +249,6 @@ const VideoGame = () => {
       pizzasCounter.text = pizzas
     })
 
-
   })
 
 
