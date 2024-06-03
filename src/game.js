@@ -24,9 +24,10 @@ import kaboom from "kaboom";
 const VideoGame = () => {
 
 
-  kaboom(
-
-  );
+  kaboom({
+    width: window.innerWidth-50,
+    height: window.innerHeight-50,
+  });
 
   loadSprite("duck", duckSpritePath);
   loadSprite("cloud", cloudSpritePath);
@@ -40,23 +41,9 @@ const VideoGame = () => {
   loadSprite("castle", castleSpritePath);
   loadSprite("fireworks", fireworksSpritePath);
   loadSprite("rotated-eagle", rotateeaglePath)
-
-  kaboom()
-
-  loadSprite("duck", duckSpritePath)
-  loadSprite("cloud", cloudSpritePath)
-  loadSprite("portal", portalSpritePath)
-  loadSprite("pterodactyl", pterodactylSpritePath)
-  loadSprite("grass", grassSpritePath)
-  loadSprite("sand", sandSpritePath)
-  loadSprite("eagle", eagleSpritePath)
-  loadSprite("ground", groundSpritePath)
-  loadSprite("castle", castleSpritePath);
-  loadSprite("fireworks", fireworksSpritePath);
   loadSprite("coin", coinSpritePath);
   loadSprite("spike", spikeSpritePath);
   loadSprite("spikeblock", spikeblockSpritePath);
-  loadSprite("lava", lavaSpritePath)
 
 
   // LOBBY
