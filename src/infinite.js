@@ -3,7 +3,9 @@ import cloudSpritePath from "./components/images/cloudsprite.png";
 import portalSpritePath from "./components/images/portal.png";
 import kaboom from "kaboom";
 
-kaboom();
+export const setupInfiniteWorld = () => {
+
+// kaboom();
 
 loadSprite("duck", duckSpritePath);
 loadSprite("cloud", cloudSpritePath);
@@ -175,3 +177,4 @@ scene("InfiniteWorld", () => {
 });
 
 go("InfiniteWorld");
+}
