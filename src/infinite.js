@@ -2,7 +2,6 @@ import duckSpritePath from "./components/images/ducksprite.png";
 import cloudSpritePath from "./components/images/cloudsprite.png";
 import portalSpritePath from "./components/images/portal.png";
 import kaboom from "kaboom";
-import { io } from "socket.io-client";
 
 kaboom();
 
@@ -10,18 +9,15 @@ loadSprite("duck", duckSpritePath);
 loadSprite("cloud", cloudSpritePath);
 loadSprite("portal", portalSpritePath);
 
-const socket = io("http://localhost:8080"); // Update the URL if necessary
-
-const MAX_CLOUDS = 20;
+const MAX_CLOUDS = 20; // Maximum number of clouds on the screen
 const PLAYER_SPEED = 500;
 const JUMP_FORCE = 1200;
+const NUM_PLATFORMS = 6;
 const PLATFORM_HEIGHT = 200;
 
 scene("InfiniteWorld", () => {
   setBackground(135, 206, 235);
   setGravity(4000);
-
-  const players = {};
 
   // Character double jump action
   const spin = (speed) => {
@@ -54,81 +50,43 @@ scene("InfiniteWorld", () => {
     body({ isStatic: true }),
   ]);
 
-  // Function to add player
-  const addPlayer = (id, x, y) => {
-    players[id] = add([
-      sprite("duck"),
-      scale(0.3),
-      pos(x, y),
-      area(),
-      body({ jumpForce: JUMP_FORCE }),
-      anchor("center"),
-      doubleJump(),
-      rotate(0),
-      spin(1500),
-      { id },
-    ]);
-  };
+  // Player
+  const duck = add([
+    sprite("duck"),
+    scale(0.3),
+    pos(50, 900),
+    area(),
+    body({ jumpForce: JUMP_FORCE }),
+    anchor("center"),
+    doubleJump(),
+    rotate(0),
+    spin(1500),
+  ]);
 
   // Player movement
-  const move = (x, id) => {
-    const player = players[id];
-    if (player) {
-      player.move(x, 0);
-      if (player.pos.x < 0) {
-        player.pos.x = width();
-      } else if (player.pos.x > width()) {
-        player.pos.x = 0;
-      }
-      socket.emit("playerMovement", { x: player.pos.x, y: player.pos.y });
+  const move = (x) => {
+    duck.move(x, 0);
+    if (duck.pos.x < 0) {
+      duck.pos.x = width();
+    } else if (duck.pos.x > width()) {
+      duck.pos.x = 0;
     }
   };
 
-  socket.on("currentPlayers", (currentPlayers) => {
-    for (let id in currentPlayers) {
-      if (currentPlayers.hasOwnProperty(id)) {
-        addPlayer(id, currentPlayers[id].x, currentPlayers[id].y);
-      }
-    }
-  });
-
-  socket.on("newPlayer", (player) => {
-    addPlayer(player.id, player.x, player.y);
-  });
-
-  socket.on("playerMoved", (player) => {
-    if (players[player.id]) {
-      players[player.id].pos.x = player.x;
-      players[player.id].pos.y = player.y;
-    }
-  });
-
-  socket.on("playerDisconnected", (id) => {
-    if (players[id]) {
-      destroy(players[id]);
-      delete players[id];
-    }
-  });
-
-  // Add current player
-  socket.on("connect", () => {
-    addPlayer(socket.id, 50, 900);
-  });
-
   onKeyDown("left", () => {
-    move(-PLAYER_SPEED, socket.id);
+    move(-PLAYER_SPEED);
   });
 
   onKeyDown("right", () => {
-    move(PLAYER_SPEED, socket.id);
+    move(PLAYER_SPEED);
   });
 
-  players[socket.id]?.onDoubleJump(() => {
-    players[socket.id].spin();
+  duck.onDoubleJump(() => {
+    duck.spin();
   });
 
   onKeyPress("space", () => {
-    players[socket.id]?.doubleJump();
+    duck.doubleJump();
   });
 
   // Keep track of the highest point reached by the player
@@ -136,9 +94,10 @@ scene("InfiniteWorld", () => {
 
   // Function to generate platforms (clouds) above the player
   const generatePlatforms = () => {
-    const clouds = get("cloud").length;
+    const clouds = get("cloud").length; // Get the current number of clouds on the screen
     if (clouds < MAX_CLOUDS) {
       for (let i = clouds; i < MAX_CLOUDS; i++) {
+        // Skip the first cloud at the bottom
         if (i === 0) continue;
         add([
           sprite("cloud"),
@@ -163,19 +122,17 @@ scene("InfiniteWorld", () => {
       p.dir = -p.dir;
     }
     if (p.pos.y > height()) {
-      p.pos.y = -PLATFORM_HEIGHT;
+      p.pos.y = -PLATFORM_HEIGHT; // Reset platform position when it goes below the screen
     }
   });
 
   // Camera view
   onUpdate(() => {
-    if (players[socket.id]) {
-      camPos(width() / 2, players[socket.id].pos.y);
-    }
+    camPos(width() / 2, duck.pos.y);
   });
 
   // Player collision with portal
-  players[socket.id]?.onCollide("portal", () => {
+  duck.onCollide("portal", () => {
     go("World1");
   });
 
@@ -191,16 +148,18 @@ scene("InfiniteWorld", () => {
       get("cloud").forEach((cloud) => {
         cloud.speed = cloudSpeed;
       });
+
+      // Other level logic goes here
     });
   };
 
   // Function to handle player reaching sky limit and transition to higher difficulty level
   const checkSkyLimit = () => {
-    const skyLimit = -200;
-    if (players[socket.id]?.pos.y < skyLimit) {
+    const skyLimit = -200; // Adjust this value as needed
+    if (duck.pos.y < skyLimit) {
       const currentLevel = state.level ? parseInt(state.level.replace("Level", "")) : 0;
       const nextLevel = currentLevel + 1;
-      const nextCloudSpeed = 500 + nextLevel * 100;
+      const nextCloudSpeed = 500 + nextLevel * 100; // Adjust the increment as needed
 
       if (!sceneExists(`Level${nextCloudSpeed}`)) {
         createLevel(nextCloudSpeed);
