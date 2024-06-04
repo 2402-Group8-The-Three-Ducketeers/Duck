@@ -1,11 +1,9 @@
+import kaboom from "kaboom";
 import duckSpritePath from "./components/images/ducksprite.png";
 import cloudSpritePath from "./components/images/cloudsprite.png";
 import portalSpritePath from "./components/images/portal.png";
-import kaboom from "kaboom";
 
-export const setupInfiniteWorld = () => {
-
-    // kaboom();
+export const setupInfiniteWorld = (players, addPlayer) => {
 
     loadSprite("duck", duckSpritePath);
     loadSprite("cloud", cloudSpritePath);
@@ -17,7 +15,7 @@ export const setupInfiniteWorld = () => {
     const NUM_PLATFORMS = 6;
     const PLATFORM_HEIGHT = 200;
 
-    scene("InfiniteWorld", () => {
+    scene("InfiniteWorld", (playerId) => {
         let score = 0;
         let highScore = 0;
         let touchedClouds = new Set();
@@ -58,9 +56,11 @@ export const setupInfiniteWorld = () => {
         ]);
 
         // Player
+        const playerSprite = players[playerId]?.spriteName || "duck";
+        const playerScale = playerSprite === "duck" ? 0.3 : 0.15; // Keep the original duck size, others smaller
         const duck = add([
-            sprite("duck"),
-            scale(0.3),
+            sprite(playerSprite),
+            scale(playerScale), // Use appropriate scale
             pos(50, 900),
             area(),
             body({ jumpForce: JUMP_FORCE }),
