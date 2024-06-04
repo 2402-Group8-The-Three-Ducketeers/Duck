@@ -1,4 +1,5 @@
 import kaboom from "kaboom";
+import { io } from "socket.io-client";
 import duckSpritePath from "./components/images/ducksprite.png";
 import duck3SpritePath from "./components/images/duck3.png";
 import duck4SpritePath from "./components/images/duck4.png";
@@ -20,6 +21,7 @@ import spikeblockSpritePath from "./components/images/spikeblock.png";
 import { setupInfiniteWorld } from "./infinite.js";
 import { setupCharacterSelection } from "./characterSelection.js";
 
+const socket = io('http://localhost:8080');
 kaboom();
 
 loadSprite("duck", duckSpritePath);
@@ -48,7 +50,7 @@ export const addPlayer = (id, x, y, spriteName = "duck") => {
     destroy(players[id]);
   }
 
-  const scaleValue = spriteName === "duck" ? 0.3 : 0.15; // Keep the original duck size, others smaller
+  const scaleValue = spriteName === "duck" ? 0.3 : 0.15;
 
   players[id] = add([
     sprite(spriteName),
@@ -143,6 +145,7 @@ export const addPlayer = (id, x, y, spriteName = "duck") => {
     } else if (player.pos.x > width()) {
       player.pos.x = 0;
     }
+    socket.emit('playerMovement', { x: player.pos.x, y: player.pos.y });
   };
 
   onKeyDown("left", () => {
@@ -160,7 +163,31 @@ export const addPlayer = (id, x, y, spriteName = "duck") => {
   onKeyPress("space", () => {
     player.doubleJump();
   });
+
+  socket.on('playerMoved', (playerData) => {
+    if (players[playerData.id]) {
+      players[playerData.id].pos.x = playerData.x;
+      players[playerData.id].pos.y = playerData.y;
+    }
+  });
 };
+
+// Connection and player handling
+socket.on('currentPlayers', (serverPlayers) => {
+  Object.keys(serverPlayers).forEach((id) => {
+    const player = serverPlayers[id];
+    addPlayer(player.id, player.x, player.y, player.sprite);
+  });
+});
+
+socket.on('newPlayer', (player) => {
+  addPlayer(player.id, player.x, player.y, player.sprite);
+});
+
+socket.on('disconnect', (id) => {
+  destroy(players[id]);
+  delete players[id];
+});
 
 // Define the spin behavior
 const spin = (speed) => {
@@ -284,6 +311,7 @@ scene("Lobby", (playerId) => {
     } else if (duck.pos.x > width()) {
       duck.pos.x = 0;
     }
+    socket.emit('playerMovement', { x: duck.pos.x, y: duck.pos.y });
   };
 
   onKeyDown("left", () => {
