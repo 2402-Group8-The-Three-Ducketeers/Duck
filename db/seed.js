@@ -13,6 +13,7 @@ const createUserTable = async () => {
       username: "admin",
       password: await bcrypt.hash("admin", 10),
       isAdmin: true,
+      imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Mallard-drake-chicago-march-2024.jpg/330px-Mallard-drake-chicago-march-2024.jpg"
     }
   })
 
@@ -21,6 +22,7 @@ const createUserTable = async () => {
       data: {
         username: `testuser${i+1}`,
         password: await bcrypt.hash("password", 10),
+        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Mallard-drake-chicago-march-2024.jpg/330px-Mallard-drake-chicago-march-2024.jpg",
       }
     })
   }
