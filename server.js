@@ -48,6 +48,12 @@ io.on('connection', (socket) => {
     sprite: 'duck'
   };
 
+  socket.on('new message sent', (msg) => {
+    console.log(`a new message was sent: ${msg}`)
+
+    io.emit('new message relayed', msg)
+  })
+
   // Send the current state of players to the new player
   socket.emit('currentPlayers', players);
 
