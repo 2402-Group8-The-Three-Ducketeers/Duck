@@ -204,16 +204,70 @@ const VideoGame = () => {
     // Prompt start message
     duck.onCollide("portal", () => {
       add([
-        text('Press "Enter"', {
+        text("Press a number to start!", {
           size: 40,
           transform: (idx) => ({
             color: hsl2rgb((time() * .2 + idx * .1) % .1, 3, .7),
           })
         }),
-        pos(width() / 2 - 70, height() / 2 + 390),
+        pos(width() / 2 - 250, height() / 2 + 380),
       ])
-      onKeyPress("enter", () => {
-        go("WorldN")
+
+      add([
+        text("(1) World 1 Normal", {
+          size: 30,
+          transform: (idx) => ({
+            color: hsl2rgb((time() * .1 + idx * 2) % 2, .5, .8),
+          })
+        }),
+        pos(width() / 2 - 930, height() / 2 + 495),
+      ])
+
+      add([
+        text("(2) World 1 Hell", {
+          size: 30,
+          transform: (idx) => ({
+            color: hsl2rgb((time() * .1 + idx * 2) % 2, .5, .8),
+          })
+        }),
+        pos(width() / 2 - 390, height() / 2 + 495),
+      ])
+
+      add([
+        text("(3) World 2 Normal", {
+          size: 30,
+          transform: (idx) => ({
+            color: hsl2rgb((time() * .1 + idx * 2) % 2, .5, .8),
+          })
+        }),
+        pos(width() / 2 + 130, height() / 2 + 495),
+      ])
+
+      add([
+        text("(4) World Infinite", {
+          size: 30,
+          transform: (idx) => ({
+            color: hsl2rgb((time() * .1 + idx * 2) % 2, .5, .8),
+          })
+        }),
+        pos(width() / 2 + 630, height() / 2 + 495),
+      ])
+
+      // game menu
+      onKeyPress("1", () => {
+       go("WorldN");
+      })
+
+      onKeyPress("2", () => {
+       go("WorldH");
+      })
+
+      onKeyPress("3", () => {
+       go("World2");
+      })
+
+      onKeyPress("4", () => {
+       go("WorldI");
       })
     })
 
@@ -1414,7 +1468,7 @@ const VideoGame = () => {
 
   })
 
-  go("WorldN")
+  go("Lobby")
 }
 
 VideoGame();
