@@ -44,6 +44,7 @@ const VideoGame = () => {
   loadSprite("axe", axeSpritePath);
   loadSprite("giant", giantSpritePath);
   loadSprite("bomb", bombSpritePath);
+  loadSprite("shark", sharkSpritePath);
 
   // LOBBY
   scene("Lobby", () => {
