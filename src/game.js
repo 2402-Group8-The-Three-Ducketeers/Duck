@@ -315,6 +315,7 @@ const VideoGame = () => {
   scene("WorldN", () => {
     const PLAYER_SPEED = 500;
     const JUMP_FORCE = 1030;
+    const FALL_DEATH = 1200;
 
     setBackground(135, 206, 235);
     setGravity(4000);
@@ -682,6 +683,12 @@ const VideoGame = () => {
       // center camera to player
       if (duck.pos.x < 25300) {
         camPos(duck.pos.x + 500, 555)
+        }
+      })
+
+      duck.onUpdate(() => {
+        if (duck.pos.y > FALL_DEATH) {
+          wait(3,() => go("lose"))
         }
       })
 
@@ -1641,9 +1648,20 @@ const VideoGame = () => {
         text("Coming soon...", {
           size: 100,
         }),
-        pos(width()/2 - 350, height()/2 - 50),
+        pos(width()/2 - 350, height()/2 - 100),
         color(255, 255, 255)
       ])
+
+      add([
+        text("(Press ESC to return to Lobby)", {
+          size: 30,
+        }),
+        pos(width()/2 - 320, height()/2 + 10),
+        color(0, 0, 0)
+      ])
+
+      onKeyPress("escape", () => go("Lobby"))
+
     })
 
 
