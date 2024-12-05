@@ -24,7 +24,11 @@ import kaboom from "kaboom";
 //function that runs our game and is exported to web page to be displayed
 const VideoGame = () => {
 
-  kaboom();
+
+  kaboom({
+    width: window.innerWidth-50,
+    height: window.innerHeight-50,
+  });
 
   loadSprite("duck", duckSpritePath);
   loadSprite("cloud", cloudSpritePath);

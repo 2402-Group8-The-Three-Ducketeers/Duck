@@ -4,6 +4,7 @@ import { setToken } from '../redux/authSlice.js';
 import { useDispatch } from 'react-redux';
 import  VideoGame  from "../game.js"
 import { useEffect } from 'react';
+import Header from '../components/Header.jsx';
 
 const Game = () => {
   const token = useSelector(state => state.authorization.token);
@@ -15,7 +16,11 @@ const Game = () => {
     VideoGame()
   }, [])
   
-  return <></>
+  return (
+    <>
+      <Header />
+    </>
+  )
 }
 
 export default Game
